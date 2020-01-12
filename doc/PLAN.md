@@ -1,6 +1,6 @@
 # Game Plan
 ## NAME
-
+B-Breaker
 
 ### Breakout Variant
 - *Jet Ball:* Instead of the normal grid alignment of bricks, this game uses concentric circles to align its "bricks". The circular "bricks" also move during the game, which makes the game more interesting and unpredictable. 
@@ -72,11 +72,12 @@ In the configurations below, the number (maximum 5) represents how many times th
 - Bricks with a heart inside give the player another life
 - Bricks with a bomb inside eliminate the 8 bricks around it
 - Bricks with a clock awards 5 seconds 
+- Bricks with a lightening increases the speed of the ball
 
 ### Cheat Key Ideas
-- LEFT ARROW and RIGHT ARROW: moving the paddle 
-- A and D: tilt the paddle 
-- SPACE: pause and restart 
+- "R": restart this level
+- "M": have 99 lives
+- "1-5": jump to that level 
 
 ### Something Extra
-Instead of controlling a horizontal paddle, the player is allowed to rotate the paddle around the center of the paddle at any angle to bounce the ball back in a more dramatic angle.
+Instead of controlling a horizontal paddle, the player is allowed to rotate the paddle around the center of the paddle at any angle with "A" and "D". This function allows the ball to bounce back in a more dramatic angle.
