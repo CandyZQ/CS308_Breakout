@@ -4,5 +4,7 @@ public enum MovingDirection {
     UPRIGHT,
     UPLEFT,
     DOWNRIGHT,
-    DOWNLEFT
+    DOWNLEFT,
+    LEFT,
+    RIGHT
 }

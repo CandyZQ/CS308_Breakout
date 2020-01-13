@@ -1,6 +1,5 @@
 package breakout;
 
-
 import javafx.scene.image.ImageView;
 
 public class Ball {
