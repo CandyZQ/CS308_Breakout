@@ -1,7 +1,7 @@
 # Game Plan
 ## NAME
-B-Breaker
-
+**B-Breaker**  
+Cady Zhou (zz160)
 ### Breakout Variant
 - *Jet Ball:* Instead of the normal grid alignment of bricks, this game uses concentric circles to align its "bricks". The circular "bricks" also move during the game, which makes the game more interesting and unpredictable. 
 
@@ -10,7 +10,7 @@ B-Breaker
 ### General Level Descriptions
 The player has three lives at the beginning of the game. Each time the player fails to catch the ball, he/she loses one life. The game is over if the player loses all three lives. 
 
-In the configurations below, the number (maximum 5) represents how many times they player needs to hit the bricks before it disappears. A successful hit awards 1 point. (i.e. eliminates a 5 9 means the brick cannot be eliminated.
+In the configurations below, the number (maximum 5) represents how many times they player needs to hit the bricks before it disappears. A successful hit awards 1 point (i.e. eliminates a 5 bricks will give the player 5 points). 9 means the brick cannot be eliminated.
 
 - **Level 1:**  
 1 1 1 1 1 1   
@@ -65,19 +65,19 @@ In the configurations below, the number (maximum 5) represents how many times th
 
 ### Bricks Ideas
 - Bricks have different points and are distinguished by a gradient of color
-- Bricks with different shapes on them have power-ups, which are elaborated in the next section
+- Bricks with different images on them have power-ups, which are elaborated in the next section
 - Gray bricks (represented with number 9) cannot be eliminated, and only disappears when all other bricks on the same line are eliminated 
 
 ### Power Up Ideas
 - Bricks with a heart inside give the player another life
 - Bricks with a bomb inside eliminate the 8 bricks around it
-- Bricks with a clock awards 5 seconds 
 - Bricks with a lightening increases the speed of the ball
+- Bricks with a question mark randomly draws one of the three power-ups
 
 ### Cheat Key Ideas
 - "R": restart this level
 - "M": have 99 lives
-- "1-5": jump to that level 
-
+- "1-5": jump to that level  
+ 
 ### Something Extra
 Instead of controlling a horizontal paddle, the player is allowed to rotate the paddle around the center of the paddle at any angle with "A" and "D". This function allows the ball to bounce back in a more dramatic angle.
