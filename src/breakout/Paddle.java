@@ -24,7 +24,7 @@ public class Paddle extends Element {
 
     @Override
     public void updateDirection() {
-        switch (direction) {
+        switch (movingDirection) {
             case RIGHT:
                 dx = 1;
                 break;

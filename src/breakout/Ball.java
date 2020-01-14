@@ -1,25 +1,24 @@
 package breakout;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 
 public class Ball extends Element {
     private double dx;
     private double dy;
-    private int radius;
+    private double radius;
 
     private Circle instance;
+    private CollisionDirection collisionDirection;
 
-    public Ball(int x, int y, int alpha, int speed, int radius, Paint fill, MovingDirection direction) {
+    public Ball(double x, double y, int alpha, int speed, double radius, Paint fill, MovingDirection direction) {
         super(x, y, alpha, speed, fill, direction);
         this.radius = radius;
         makeShape();
+        collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    public Ball(int x, int y, int speed, int radius, Paint fill) {
+    public Ball(double x, double y, int speed, double radius, Paint fill) {
         this(x, y, 60, speed, radius, fill, MovingDirection.STAY);
     }
 
@@ -34,7 +33,7 @@ public class Ball extends Element {
         dx = Math.cos(Math.toRadians(alpha));
         dy = Math.sin(Math.toRadians(alpha));
 
-        switch (direction) {
+        switch (movingDirection) {
             case UPRIGHT:
                 dy = -dy;
                 break;
@@ -64,20 +63,56 @@ public class Ball extends Element {
     }
 
     public void move(double elapsedTime) {
-        instance.setCenterX(instance.getCenterX() + dx * elapsedTime * speed);
-        instance.setCenterY(instance.getCenterY() + dy * elapsedTime * speed);
+//        System.out.println("dx: " + dx);
+//        System.out.println("dy: " + dy);
+        x = instance.getCenterX() + dx * elapsedTime * speed;
+        y = instance.getCenterY() + dy * elapsedTime * speed;
+        instance.setCenterX(x);
+        instance.setCenterY(y);
     }
 
     public void paddleCollision() {
-        direction = direction == MovingDirection.DOWNLEFT ? MovingDirection.UPRIGHT : MovingDirection.UPLEFT;
-        updateDirection();
+        collisionDirection = CollisionDirection.DOWNTOUP;
+        changeDirection();
     }
 
     public boolean hitBoundary(int width, int height) {
-        return (x - radius < 0) || (x + radius > width) || (y + radius > height);
+        return ((x - radius < 0) || (x + radius > width) || (y - radius < 0));
+//        System.out.println("x + radius: " + (x + radius));
+//        System.out.println("x - radius: " + (x - radius));
+//        System.out.println("y + radius: " + (y + radius));
     }
 
-    public void boundaryCollision() {
+    public void changeDirection() {
+        switch (collisionDirection) {
+            case LEFTTORIGHT:
+                movingDirection = movingDirection == MovingDirection.UPLEFT ? MovingDirection.UPRIGHT : MovingDirection.DOWNRIGHT;
+                break;
+            case UPTODOWN:
+                movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.DOWNRIGHT : MovingDirection.DOWNLEFT;
+                break;
+            case RIGHTTOLEFT:
+                movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.UPLEFT : MovingDirection.DOWNLEFT;
+                break;
+            case DOWNTOUP:
+                movingDirection = movingDirection == MovingDirection.DOWNLEFT ? MovingDirection.UPLEFT : MovingDirection.UPRIGHT;
+            default:
+                break;
+        }
+        updateDirection();
+        collisionDirection = CollisionDirection.NO_COLLISION;
+    }
 
+    public void boundaryCollision(int width, int height) {
+        if (x - radius < 0) {
+            collisionDirection = CollisionDirection.LEFTTORIGHT;
+        } else if (x + radius > width) {
+            collisionDirection = CollisionDirection.RIGHTTOLEFT;
+        } else if (y - radius < 0) {
+            collisionDirection = CollisionDirection.UPTODOWN;
+        } else {
+            throw new IllegalStateException("There is no collision!");
+        }
+        changeDirection();
     }
 }

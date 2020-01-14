@@ -5,17 +5,12 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.util.Objects;
 
 
 /**
@@ -33,9 +28,9 @@ public class Main extends Application {
     private static final Paint BALL_COLOR = Color.AZURE;
     public static final int BALL_RADIUS = 30;
 
-    private static final int BALL_SPEED_NORMAL = 100;
+    private static final int BALL_SPEED_NORMAL = 300;
     private static final int BALL_SPEED_FAST = 8;
-    private static final int PADDLE_SPEED_NORMAL = 100;
+    private static final int PADDLE_SPEED_NORMAL = 300;
 
     private static final int HEIGHT = 600;
     private static final int WIDTH = 1200;
@@ -91,7 +86,7 @@ public class Main extends Application {
     }
 
     private void handleKeyReleased(KeyCode code) {
-        paddle.setDirection(MovingDirection.STAY);
+        paddle.setMovingDirection(MovingDirection.STAY);
     }
 
     private void step (double elapsedTime) {
@@ -99,26 +94,26 @@ public class Main extends Application {
         paddle.move(elapsedTime);
 
         // collision check
-//        Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
-//        if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
-//            ball.paddleCollision();
-//        }
-//
-//        if (ball.hitBoundary(WIDTH, HEIGHT)) {
-//            ball.boundaryCollision();
-//        }
+        Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
+        if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
+            ball.paddleCollision();
+        }
+
+        if (ball.hitBoundary(WIDTH, HEIGHT)) {
+            ball.boundaryCollision(WIDTH, HEIGHT);
+        }
     }
 
     private void handleKeyInput (KeyCode code) {
          switch (code) {
              case RIGHT:
-                 paddle.setDirection(MovingDirection.RIGHT);
+                 paddle.setMovingDirection(MovingDirection.RIGHT);
                  break;
              case LEFT:
-                 paddle.setDirection(MovingDirection.LEFT);
+                 paddle.setMovingDirection(MovingDirection.LEFT);
                  break;
              case SPACE:
-                 ball.setDirection(MovingDirection.UPRIGHT);
+                 ball.setMovingDirection(MovingDirection.UPRIGHT);
              default:
                  break;
 
