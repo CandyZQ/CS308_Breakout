@@ -12,9 +12,26 @@ public class Paddle extends Element {
     }
 
     public Paddle(int x, int y, int speed) {
-        this(x, y, 0, speed, MovingDirection.RIGHT);
+        this(x, y, 0, speed, MovingDirection.STAY);
     }
 
+    @Override
     public void updateDirection() {
+        switch (direction) {
+            case RIGHT:
+                dx = 1;
+                break;
+            case LEFT:
+                dx = -1;
+                break;
+            case STAY:
+                dx = 0;
+            default:
+                break;
+        }
+    }
+
+    public void move(double elapsedTime) {
+        instance.setX(instance.getX() + dx * elapsedTime * speed);
     }
 }

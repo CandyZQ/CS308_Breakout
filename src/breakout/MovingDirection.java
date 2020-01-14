@@ -6,5 +6,6 @@ public enum MovingDirection {
     DOWNRIGHT,
     DOWNLEFT,
     LEFT,
-    RIGHT
+    RIGHT,
+    STAY
 }

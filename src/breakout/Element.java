@@ -2,7 +2,7 @@ package breakout;
 
 import javafx.scene.image.ImageView;
 
-public class Element {
+public abstract class Element {
     int x;
     int y;
     int alpha;
@@ -11,7 +11,7 @@ public class Element {
     MovingDirection direction;
     ElementOperations operation;
 
-    ImageView instance;
+    public ImageView instance;
 
     public Element(int x, int y, int alpha, int speed, MovingDirection direction) {
         this.x = x;
@@ -37,11 +37,11 @@ public class Element {
         return instance;
     }
 
-
-    public void updateDirection() {
-    }
-
     public void setDirection(MovingDirection direction) {
         this.direction = direction;
+        updateDirection();
     }
+
+    public abstract void updateDirection();
+
 }
