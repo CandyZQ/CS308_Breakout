@@ -4,20 +4,21 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public class Ball extends Element {
-    private int dx;
-    private int dy;
+    private double dx;
+    private double dy;
 
     public Ball(int x, int y, int alpha, int speed, MovingDirection direction) {
         super(x, y, alpha, speed, direction);
     }
 
     public Ball(int x, int y, int speed) {
-        this(x, y, 60, speed, MovingDirection.UPRIGHT);
+        this(x, y, 60, speed, MovingDirection.STAY);
     }
 
+    @Override
     public void updateDirection() {
-        dx = (int) Math.cos(alpha);
-        dy = (int) Math.sin(alpha);
+        dx = Math.cos(Math.toRadians(alpha));
+        dy = Math.sin(Math.toRadians(alpha));
 
         switch (direction) {
             case UPRIGHT:
@@ -32,6 +33,9 @@ public class Ball extends Element {
             case DOWNRIGHT:
                 // Do not have to change
                 break;
+            case STAY:
+                dx = 0;
+                dy = 0;
             default:
                 break;
         }
