@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -21,16 +22,21 @@ import java.util.Objects;
  * Feel free to completely change this code or delete it entirely. 
  */
 public class Main extends Application {
-    private static final String BALL_IMAGE = "heart.gif";
     private static final String HEART_IMAGE = "heart.gif";
-    private static final String PADDLE_IMAGE = "paddle.png";
 
     private static final int PADDLE_OFFSET_BOTTOM = 200;
+    private static final Paint PADDLE_COLOR = Color.YELLOW;
+    private static final int PADDLE_WIDTH = 200;
+    private static final int PADDLE_HEIGHT = 30;
+
     private static final int BALL_OFFSET_BOTTOM = 250;
+    private static final Paint BALL_COLOR = Color.AZURE;
+    public static final int BALL_RADIUS = 30;
 
     private static final int BALL_SPEED_NORMAL = 100;
     private static final int BALL_SPEED_FAST = 8;
     private static final int PADDLE_SPEED_NORMAL = 100;
+
     private static final int HEIGHT = 600;
     private static final int WIDTH = 1200;
     private static final Paint BACKGROUND = Color.BLACK;
@@ -73,10 +79,10 @@ public class Main extends Application {
     private Scene setupGame (int width, int height, Paint background) {
         Group root = new Group();
 
-        paddle = new Paddle(width / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL);
-        ball = new Ball(width / 2, height - BALL_OFFSET_BOTTOM, BALL_SPEED_NORMAL);
-        root.getChildren().add(ball.getInstance(BALL_IMAGE));
-        root.getChildren().add(paddle.getInstance(PADDLE_IMAGE));
+        paddle = new Paddle(width / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
+        ball = new Ball(width / 2, height - BALL_OFFSET_BOTTOM, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
+        root.getChildren().add(ball.getInstance());
+        root.getChildren().add(paddle.getInstance());
 
         Scene scene = new Scene(root, width, height, background);
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -92,12 +98,14 @@ public class Main extends Application {
         ball.move(elapsedTime);
         paddle.move(elapsedTime);
 
-//        // with images can only check bounding box
-//        if (ball.getInstance().getBoundsInParent().intersects(brick.getInstance().getBoundsInParent())) {
-//            myGrower.setFill(HIGHLIGHT);
+        // collision check
+//        Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
+//        if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
+//            ball.paddleCollision();
 //        }
-//        else {
-//            myGrower.setFill(GROWER_COLOR);
+//
+//        if (ball.hitBoundary(WIDTH, HEIGHT)) {
+//            ball.boundaryCollision();
 //        }
     }
 
@@ -109,6 +117,8 @@ public class Main extends Application {
              case LEFT:
                  paddle.setDirection(MovingDirection.LEFT);
                  break;
+             case SPACE:
+                 ball.setDirection(MovingDirection.UPRIGHT);
              default:
                  break;
 

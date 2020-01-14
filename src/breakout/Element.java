@@ -1,41 +1,31 @@
 package breakout;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public abstract class Element {
     int x;
     int y;
     int alpha;
     int speed;
+    Paint fill;
 
     MovingDirection direction;
-    ElementOperations operation;
 
-    public ImageView instance;
-
-    public Element(int x, int y, int alpha, int speed, MovingDirection direction) {
+    public Element(int x, int y, int alpha, int speed, Paint fill, MovingDirection direction) {
         this.x = x;
         this.y = y;
         this.speed = speed;
         this.alpha = alpha;
         this.direction = direction;
-        instance = null;
-
-        operation = new ElementOperations();
+        this.fill = fill;
         updateDirection();
     }
 
-    public ImageView getInstance(String pic) {
-        instance = operation.setupElement(pic, x, y);
-        return instance;
-    }
-
-    public ImageView getInstance() throws NullPointerException {
-        if (instance == null) {
-            throw new NullPointerException("Instance has not been created");
-        }
-        return instance;
-    }
+    public abstract void makeShape();
+    public abstract Shape getInstance() throws NullPointerException;
 
     public void setDirection(MovingDirection direction) {
         this.direction = direction;
@@ -43,5 +33,4 @@ public abstract class Element {
     }
 
     public abstract void updateDirection();
-
 }

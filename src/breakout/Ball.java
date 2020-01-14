@@ -2,17 +2,31 @@ package breakout;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
 public class Ball extends Element {
     private double dx;
     private double dy;
+    private int radius;
 
-    public Ball(int x, int y, int alpha, int speed, MovingDirection direction) {
-        super(x, y, alpha, speed, direction);
+    private Circle instance;
+
+    public Ball(int x, int y, int alpha, int speed, int radius, Paint fill, MovingDirection direction) {
+        super(x, y, alpha, speed, fill, direction);
+        this.radius = radius;
+        makeShape();
     }
 
-    public Ball(int x, int y, int speed) {
-        this(x, y, 60, speed, MovingDirection.STAY);
+    public Ball(int x, int y, int speed, int radius, Paint fill) {
+        this(x, y, 60, speed, radius, fill, MovingDirection.STAY);
+    }
+
+    @Override
+    public void makeShape() {
+        instance = new Circle(x, y, radius);
+        instance.setFill(fill);
     }
 
     @Override
@@ -41,8 +55,29 @@ public class Ball extends Element {
         }
     }
 
+    @Override
+    public Circle getInstance() throws NullPointerException {
+        if (instance == null) {
+            throw new NullPointerException("Instance has not been created");
+        }
+        return instance;
+    }
+
     public void move(double elapsedTime) {
-        instance.setX(instance.getX() + dx * elapsedTime * speed);
-        instance.setY(instance.getY() + dy * elapsedTime * speed);
+        instance.setCenterX(instance.getCenterX() + dx * elapsedTime * speed);
+        instance.setCenterY(instance.getCenterY() + dy * elapsedTime * speed);
+    }
+
+    public void paddleCollision() {
+        direction = direction == MovingDirection.DOWNLEFT ? MovingDirection.UPRIGHT : MovingDirection.UPLEFT;
+        updateDirection();
+    }
+
+    public boolean hitBoundary(int width, int height) {
+        return (x - radius < 0) || (x + radius > width) || (y + radius > height);
+    }
+
+    public void boundaryCollision() {
+
     }
 }
