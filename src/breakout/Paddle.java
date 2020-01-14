@@ -6,19 +6,19 @@ import javafx.scene.shape.Rectangle;
 public class Paddle extends Element {
     private int dx;
     private int da;
-    private int width;
-    private int height;
+    private double width;
+    private double height;
 
     private Rectangle instance;
 
-    public Paddle(int x, int y, int angle, int speed, int width, int height, Paint fill, MovingDirection direction) {
+    public Paddle(double x, double y, int angle, int speed, double width, double height, Paint fill, MovingDirection direction) {
         super(x, y, angle, speed, fill, direction);
         this.width = width;
         this.height = height;
         makeShape();
     }
 
-    public Paddle(int x, int y, int speed, int width, int height, Paint fill) {
+    public Paddle(double x, double y, int speed, double width, double height, Paint fill) {
         this(x, y, 0, speed, width, height, fill, MovingDirection.STAY);
     }
 
@@ -52,7 +52,14 @@ public class Paddle extends Element {
         return instance;
     }
 
-    public void move(double elapsedTime) {
-        instance.setX(instance.getX() + dx * elapsedTime * speed);
+    public void move(double elapsedTime, int sceneWidth) {
+        x = instance.getX() + dx * elapsedTime * speed;
+        x = x + width > sceneWidth ? sceneWidth - width: x;
+        x = x < 0 ? 0 : x;
+        instance.setX(x);
+    }
+
+    public double getHeight() {
+        return height;
     }
 }

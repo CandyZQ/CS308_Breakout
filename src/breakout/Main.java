@@ -75,7 +75,7 @@ public class Main extends Application {
         Group root = new Group();
 
         paddle = new Paddle(width / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
-        ball = new Ball(width / 2, height - BALL_OFFSET_BOTTOM, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
+        ball = new Ball(width / 2, height - PADDLE_OFFSET_BOTTOM - paddle.getHeight(), BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
         root.getChildren().add(ball.getInstance());
         root.getChildren().add(paddle.getInstance());
 
@@ -91,7 +91,7 @@ public class Main extends Application {
 
     private void step (double elapsedTime) {
         ball.move(elapsedTime);
-        paddle.move(elapsedTime);
+        paddle.move(elapsedTime, WIDTH);
 
         // collision check
         Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
