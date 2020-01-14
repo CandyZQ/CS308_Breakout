@@ -74,8 +74,8 @@ public class Main extends Application {
     private Scene setupGame (int width, int height, Paint background) {
         Group root = new Group();
 
-        paddle = new Paddle(width / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
-        ball = new Ball(width / 2, height - PADDLE_OFFSET_BOTTOM - paddle.getHeight(), BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
+        paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
+        ball = new Ball(width / 2, height - PADDLE_OFFSET_BOTTOM, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
         root.getChildren().add(ball.getInstance());
         root.getChildren().add(paddle.getInstance());
 

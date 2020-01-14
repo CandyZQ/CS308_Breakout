@@ -13,6 +13,7 @@ public class Ball extends Element {
 
     public Ball(double x, double y, int alpha, int speed, double radius, Paint fill, MovingDirection direction) {
         super(x, y - radius, alpha, speed, fill, direction);
+
         this.radius = radius;
         makeShape();
         collisionDirection = CollisionDirection.NO_COLLISION;
