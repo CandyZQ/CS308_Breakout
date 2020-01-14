@@ -1,39 +1,19 @@
 package breakout;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Ball {
-    private int x;
-    private int y;
-    private int alpha;
-    private int speed;
-
+public class Ball extends Element {
     private int dx;
     private int dy;
 
-    private MovingDirection direction;
-    private ElementOperations ballOperation;
-
     public Ball(int x, int y, int alpha, int speed, MovingDirection direction) {
-        this.x = x;
-        this.y = y;
-        this.speed = speed;
-        this.alpha = alpha;
-        this.direction = direction;
-
-        ballOperation = new ElementOperations();
-        updateDirection();
+        super(x, y, alpha, speed, direction);
     }
 
     public Ball(int x, int y, int speed) {
         this(x, y, 60, speed, MovingDirection.UPRIGHT);
     }
-
-
-    public ImageView getInstance(String pic) {
-        return ballOperation.setupElement(pic, x, y);
-    }
-
 
     public void updateDirection() {
         dx = (int) Math.cos(alpha);
@@ -57,7 +37,8 @@ public class Ball {
         }
     }
 
-    public void setDirection(MovingDirection direction) {
-        this.direction = direction;
+    public void move(double elapsedTime) {
+        instance.setX(instance.getX() + dx * elapsedTime * speed);
+        instance.setY(instance.getY() + dy * elapsedTime * speed);
     }
 }
