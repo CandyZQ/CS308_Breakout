@@ -1,5 +1,6 @@
 package breakout;
 
+import breakout.directions.MovingDirection;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -106,6 +107,17 @@ public class Main extends Application {
 
         if (ball.hitBoundary(BG_WIDTH, BG_HEIGHT)) {
             ball.boundaryCollision(BG_WIDTH, BG_HEIGHT);
+        }
+
+        for(Brick[] brickRow: bricks.getBricks()) {
+            for (Brick brick: brickRow) {
+                if (brick != null) {
+                    Shape ballBrickIntersection = Shape.intersect(ball.getInstance(), brick.getInstance());
+                    if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
+                        ball.brickCollision(brick);
+                    }
+                }
+            }
         }
     }
 

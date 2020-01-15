@@ -1,5 +1,6 @@
 package breakout;
 
+import breakout.directions.MovingDirection;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
@@ -23,7 +24,7 @@ public class Paddle extends Element {
     }
 
     @Override
-    public void updateDirection() {
+    public void updateMovingDirection() {
         switch (movingDirection) {
             case RIGHT:
                 dx = 1;

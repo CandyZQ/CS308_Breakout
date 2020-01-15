@@ -1,10 +1,12 @@
 package breakout;
 
 
+import breakout.directions.MovingDirection;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 
 public class Brick{
     public static final int BRICK_WIDTH = Main.BG_WIDTH / BrickPane.COL_NUM;
@@ -18,17 +20,16 @@ public class Brick{
     public static final Paint COLOR_LEVEL_FOUR_BRICK = Color.PALEVIOLETRED;
     public static final Paint COLOR_LEVEL_FIVE_BRICK = Color.SALMON;
     public static final Paint COLOR_UNREMOVABLE = Color.DARKGRAY;
-    public static final Paint COLOR_NO_BRICK = Color.TRANSPARENT;
 
     private int level;
     private Rectangle rectangle;
+
 
     public Brick(int level) {
         this.level = level;
         rectangle = new Rectangle(BRICK_WIDTH, BRICK_HEIGHT);
         setColor();
     }
-
 
     public void makeDamage() {
         if (level == UNREMOVABLE) return;
@@ -70,8 +71,11 @@ public class Brick{
     public Rectangle getInstance() {
         return rectangle;
     }
+    public double getX() {
+        return rectangle.getX();
+    }
 
-    public Paint getColor() {
-        return rectangle.getFill();
+    public double getY() {
+        return rectangle.getY();
     }
 }

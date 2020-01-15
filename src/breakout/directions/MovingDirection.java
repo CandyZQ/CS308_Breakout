@@ -1,4 +1,4 @@
-package breakout;
+package breakout.directions;
 
 public enum MovingDirection {
     LEFT,

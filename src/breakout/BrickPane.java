@@ -15,9 +15,9 @@ public class BrickPane {
     public static final int ROW_NUM = 8;
     public static final int COL_NUM = 6;
 
-    Brick[][] bricks;
-    Integer[][] brickRepresentations;
-    GridPane gridPane;
+    private Brick[][] bricks;
+    private Integer[][] brickRepresentations;
+    private GridPane gridPane;
 
     public BrickPane(String filename) {
         bricks = new Brick[ROW_NUM][COL_NUM];
@@ -92,8 +92,11 @@ public class BrickPane {
         }
     }
 
-
     public GridPane getInstance() {
         return gridPane;
+    }
+
+    public Brick[][] getBricks() {
+        return bricks;
     }
 }

@@ -1,5 +1,6 @@
 package breakout;
 
+import breakout.directions.MovingDirection;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 
@@ -19,7 +20,7 @@ public abstract class Element {
         this.alpha = alpha;
         this.movingDirection = movingDirection;
         this.fill = fill;
-        updateDirection();
+        updateMovingDirection();
     }
 
     public abstract void makeShape();
@@ -27,8 +28,8 @@ public abstract class Element {
 
     public void setMovingDirection(MovingDirection movingDirection) {
         this.movingDirection = movingDirection;
-        updateDirection();
+        updateMovingDirection();
     }
 
-    public abstract void updateDirection();
+    public abstract void updateMovingDirection();
 }

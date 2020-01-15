@@ -1,5 +1,7 @@
 package breakout;
 
+import breakout.directions.CollisionDirection;
+import breakout.directions.MovingDirection;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
@@ -30,7 +32,7 @@ public class Ball extends Element {
     }
 
     @Override
-    public void updateDirection() {
+    public void updateMovingDirection() {
         dx = Math.cos(Math.toRadians(alpha));
         dy = Math.sin(Math.toRadians(alpha));
 
@@ -100,7 +102,7 @@ public class Ball extends Element {
             default:
                 break;
         }
-        updateDirection();
+        updateMovingDirection();
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
@@ -113,6 +115,22 @@ public class Ball extends Element {
             collisionDirection = CollisionDirection.UPTODOWN;
         } else {
             throw new IllegalStateException("There is no collision!");
+        }
+        changeDirection();
+    }
+
+    public void brickCollision(Brick brick) {
+        if (y + radius <= brick.getY()) {
+            collisionDirection = CollisionDirection.DOWNTOUP;
+        } else if (y - radius >= brick.getY() + brick.BRICK_HEIGHT) {
+            collisionDirection = CollisionDirection.UPTODOWN;
+        } else if (x < brick.getX()) {
+            collisionDirection = CollisionDirection.RIGHTTOLEFT;
+        } else if (x > brick.getX() + brick.BRICK_WIDTH) {
+            collisionDirection = CollisionDirection.LEFTTORIGHT;
+        } else {
+            collisionDirection = CollisionDirection.LEFTTORIGHT;
+            System.out.println("Warning: Invalid Brick Collision!");
         }
         changeDirection();
     }
