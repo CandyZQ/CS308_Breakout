@@ -1,5 +1,6 @@
 package breakout;
 
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
 import java.io.File;
@@ -62,19 +63,31 @@ public class BrickPane {
     private void makeBricks() {
         for (int r = 0; r < ROW_NUM; r++) {
             for (int c = 0; c < COL_NUM; c++) {
-                bricks[r][c] = new Brick(brickRepresentations[r][c]);
+                if (brickRepresentations[r][c] == 0) {
+                    bricks[r][c] = null;
+                } else {
+                    bricks[r][c] = new Brick(brickRepresentations[r][c]);
+                }
             }
         }
-    }
 
+    }
     private void setupPane() {
         gridPane = new GridPane();
+        gridPane.setPrefSize(Main.BG_WIDTH, Main.BG_HEIGHT);
+//        for (int i = 0; i < COL_NUM; i++) {
+//            ColumnConstraints c = new ColumnConstraints();
+//            c.setPercentWidth(100 / COL_NUM);
+//            gridPane.getColumnConstraints().add(c);
+//        }
         gridPane.setHgap(BRICK_GAP);
         gridPane.setVgap(BRICK_GAP);
 
         for (int r = 0; r < ROW_NUM; r++) {
             for (int c = 0; c < COL_NUM; c++) {
-                gridPane.add(bricks[r][c].getInstance(), r, c);
+                if (bricks[r][c] != null) {
+                    gridPane.add(bricks[r][c].getInstance(), c, r);
+                }
             }
         }
     }

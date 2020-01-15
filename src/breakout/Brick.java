@@ -7,7 +7,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class Brick{
-    public static final int BRICK_WIDTH = 180;
+    public static final int BRICK_WIDTH = Main.BG_WIDTH / BrickPane.COL_NUM;
     public static final int BRICK_HEIGHT = 20;
 
     public static final int UNREMOVABLE = 9;
@@ -18,6 +18,7 @@ public class Brick{
     public static final Paint COLOR_LEVEL_FOUR_BRICK = Color.PALEVIOLETRED;
     public static final Paint COLOR_LEVEL_FIVE_BRICK = Color.SALMON;
     public static final Paint COLOR_UNREMOVABLE = Color.DARKGRAY;
+    public static final Paint COLOR_NO_BRICK = Color.TRANSPARENT;
 
     private int level;
     private Rectangle rectangle;
@@ -35,8 +36,10 @@ public class Brick{
         setColor();
     }
 
-    private void setColor() {
+    private boolean setColor() {
         switch (level) {
+            case 0:
+                return shouldRemove();
             case 1:
                 rectangle.setFill(COLOR_LEVEL_ONE_BRICK);
                 break;
@@ -57,9 +60,18 @@ public class Brick{
             default:
                 break;
         }
+        return false;
+    }
+
+    public boolean shouldRemove() {
+        return level == 0;
     }
 
     public Rectangle getInstance() {
         return rectangle;
+    }
+
+    public Paint getColor() {
+        return rectangle.getFill();
     }
 }

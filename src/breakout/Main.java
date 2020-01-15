@@ -24,19 +24,19 @@ public class Main extends Application {
 
     public static final int PADDLE_OFFSET_BOTTOM = 200;
     public static final Paint PADDLE_COLOR = Color.YELLOW;
-    public static final int PADDLE_WIDTH = 200;
-    public static final int PADDLE_HEIGHT = 30;
+    public static final int PADDLE_WIDTH = 100;
+    public static final int PADDLE_HEIGHT = 10;
 
     public static final int BALL_OFFSET_BOTTOM = 250;
     public static final Paint BALL_COLOR = Color.AZURE;
-    public static final int BALL_RADIUS = 30;
+    public static final int BALL_RADIUS = 10;
 
     public static final int BALL_SPEED_NORMAL = 300;
     public static final int BALL_SPEED_FAST = 8;
     public static final int PADDLE_SPEED_NORMAL = 300;
 
-    public static final int BG_HEIGHT = 600;
-    public static final int BG_WIDTH = 1200;
+    public static final int BG_HEIGHT = 800;
+    public static final int BG_WIDTH = 1000;
     public static final Paint BACKGROUND = Color.BLACK;
 
     public static final int FRAMES_PER_SECOND = 60;
