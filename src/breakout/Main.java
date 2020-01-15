@@ -6,35 +6,38 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+
 
 /**
  * Feel free to completely change this code or delete it entirely. 
  */
 public class Main extends Application {
-    private static final String HEART_IMAGE = "heart.gif";
+    public static final String HEART_IMAGE = "heart.gif";
 
-    private static final int PADDLE_OFFSET_BOTTOM = 200;
-    private static final Paint PADDLE_COLOR = Color.YELLOW;
-    private static final int PADDLE_WIDTH = 200;
-    private static final int PADDLE_HEIGHT = 30;
+    public static final int PADDLE_OFFSET_BOTTOM = 200;
+    public static final Paint PADDLE_COLOR = Color.YELLOW;
+    public static final int PADDLE_WIDTH = 200;
+    public static final int PADDLE_HEIGHT = 30;
 
-    private static final int BALL_OFFSET_BOTTOM = 250;
-    private static final Paint BALL_COLOR = Color.AZURE;
+    public static final int BALL_OFFSET_BOTTOM = 250;
+    public static final Paint BALL_COLOR = Color.AZURE;
     public static final int BALL_RADIUS = 30;
 
-    private static final int BALL_SPEED_NORMAL = 300;
-    private static final int BALL_SPEED_FAST = 8;
-    private static final int PADDLE_SPEED_NORMAL = 300;
+    public static final int BALL_SPEED_NORMAL = 300;
+    public static final int BALL_SPEED_FAST = 8;
+    public static final int PADDLE_SPEED_NORMAL = 300;
 
-    private static final int HEIGHT = 600;
-    private static final int WIDTH = 1200;
-    private static final Paint BACKGROUND = Color.BLACK;
+    public static final int BG_HEIGHT = 600;
+    public static final int BG_WIDTH = 1200;
+    public static final Paint BACKGROUND = Color.BLACK;
 
     public static final int FRAMES_PER_SECOND = 60;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -42,8 +45,9 @@ public class Main extends Application {
 
 
     private Ball ball;
-    private Paddle brick;
+    private BrickPane bricks;
     private Paddle paddle;
+    private GridPane gridPane;
 
     private int ballSpeed = BALL_SPEED_NORMAL;
     private int paddleSpeed = PADDLE_SPEED_NORMAL;
@@ -57,7 +61,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Scene scene = setupGame(WIDTH, HEIGHT, BACKGROUND);
+        Scene scene = setupGame(BG_WIDTH, BG_HEIGHT, BACKGROUND);
 
         primaryStage.setTitle("B-Breaker");
         primaryStage.setScene(scene);
@@ -76,8 +80,9 @@ public class Main extends Application {
 
         paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
         ball = new Ball(width / 2, height - PADDLE_OFFSET_BOTTOM, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
-        root.getChildren().add(ball.getInstance());
-        root.getChildren().add(paddle.getInstance());
+        bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + "map_level_1.txt");
+
+        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
 
         Scene scene = new Scene(root, width, height, background);
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -91,7 +96,7 @@ public class Main extends Application {
 
     private void step (double elapsedTime) {
         ball.move(elapsedTime);
-        paddle.move(elapsedTime, WIDTH);
+        paddle.move(elapsedTime, BG_WIDTH);
 
         // collision check
         Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
@@ -99,8 +104,8 @@ public class Main extends Application {
             ball.paddleCollision();
         }
 
-        if (ball.hitBoundary(WIDTH, HEIGHT)) {
-            ball.boundaryCollision(WIDTH, HEIGHT);
+        if (ball.hitBoundary(BG_WIDTH, BG_HEIGHT)) {
+            ball.boundaryCollision(BG_WIDTH, BG_HEIGHT);
         }
     }
 
