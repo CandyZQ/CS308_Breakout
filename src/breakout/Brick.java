@@ -1,12 +1,9 @@
 package breakout;
 
 
-import breakout.directions.MovingDirection;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class Brick{
     public static final int BRICK_WIDTH = Main.BG_WIDTH / BrickPane.COL_NUM;
@@ -31,16 +28,14 @@ public class Brick{
         setColor();
     }
 
-    public void makeDamage() {
-        if (level == UNREMOVABLE) return;
+    public boolean takeDamage() {
+        if (level == UNREMOVABLE) return false;
         level -= 1;
-        setColor();
+        return setColor();
     }
 
     private boolean setColor() {
         switch (level) {
-            case 0:
-                return shouldRemove();
             case 1:
                 rectangle.setFill(COLOR_LEVEL_ONE_BRICK);
                 break;
@@ -59,13 +54,13 @@ public class Brick{
             case UNREMOVABLE:
                 rectangle.setFill(COLOR_UNREMOVABLE);
             default:
-                break;
+                return shouldRemove();
         }
         return false;
     }
 
     public boolean shouldRemove() {
-        return level == 0;
+        return level <= 0;
     }
 
     public Rectangle getInstance() {

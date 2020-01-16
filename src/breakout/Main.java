@@ -28,16 +28,15 @@ public class Main extends Application {
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 10;
 
-    public static final int BALL_OFFSET_BOTTOM = 250;
     public static final Paint BALL_COLOR = Color.AZURE;
     public static final int BALL_RADIUS = 10;
 
-    public static final int BALL_SPEED_NORMAL = 300;
+    public static final int BALL_SPEED_NORMAL = 400;
     public static final int BALL_SPEED_FAST = 8;
     public static final int PADDLE_SPEED_NORMAL = 300;
 
-    public static final int BG_HEIGHT = 800;
-    public static final int BG_WIDTH = 1000;
+    public static final int BG_HEIGHT = 500;
+    public static final int BG_WIDTH = 800;
     public static final Paint BACKGROUND = Color.BLACK;
 
     public static final int FRAMES_PER_SECOND = 60;
@@ -81,7 +80,7 @@ public class Main extends Application {
 
         paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - PADDLE_OFFSET_BOTTOM, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
         ball = new Ball(width / 2, height - PADDLE_OFFSET_BOTTOM, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR);
-        bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + "map_level_1.txt");
+        bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + "map_level_5.txt");
 
         root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
 
@@ -109,12 +108,15 @@ public class Main extends Application {
             ball.boundaryCollision(BG_WIDTH, BG_HEIGHT);
         }
 
-        for(Brick[] brickRow: bricks.getBricks()) {
-            for (Brick brick: brickRow) {
+        for(int r = 0; r < BrickPane.ROW_NUM; r++) {
+            for (int c = 0; c < BrickPane.COL_NUM; c++) {
+                Brick brick = bricks.getBricks()[r][c];
                 if (brick != null) {
                     Shape ballBrickIntersection = Shape.intersect(ball.getInstance(), brick.getInstance());
+
                     if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
                         ball.brickCollision(brick);
+                        bricks.updateBrickStatus(r, c);
                     }
                 }
             }

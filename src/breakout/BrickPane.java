@@ -92,11 +92,29 @@ public class BrickPane {
         }
     }
 
+    private void updataPane(Brick brick, int r, int c) {
+        for (var node: gridPane.getChildren()) {
+            if (gridPane.getRowIndex(node) == r && gridPane.getColumnIndex(node) == c) {
+                gridPane.getChildren().remove(node);
+                if (brick != null) {
+                    gridPane.add(brick.getInstance(), c, r);
+                }
+            }
+        }
+    }
+
     public GridPane getInstance() {
         return gridPane;
     }
 
     public Brick[][] getBricks() {
         return bricks;
+    }
+
+    public void updateBrickStatus(int r, int c) {
+        if (bricks[r][c].takeDamage()) {
+            bricks[r][c] = null;
+        }
+        updataPane(bricks[r][c], r, c);
     }
 }
