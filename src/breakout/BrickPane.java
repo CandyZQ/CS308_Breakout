@@ -75,13 +75,13 @@ public class BrickPane {
     }
     private void setupPane() {
         gridPane = new GridPane();
-        gridPane.setPrefSize(Main.BG_WIDTH, Main.BG_HEIGHT);
+        gridPane.setPrefSize(Level.BG_WIDTH, Level.BG_HEIGHT);
 
         gridPane.setHgap(BRICK_GAP);
         gridPane.setVgap(BRICK_GAP);
 
         for (int c = 0; c < COL_NUM; c++) {
-            ColumnConstraints columnConstraints = new ColumnConstraints((double) (Main.BG_WIDTH - (COL_NUM - 1) * BRICK_GAP) / COL_NUM);
+            ColumnConstraints columnConstraints = new ColumnConstraints((double) (Level.BG_WIDTH - (COL_NUM - 1) * BRICK_GAP) / COL_NUM);
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 

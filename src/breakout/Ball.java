@@ -81,7 +81,7 @@ public class Ball extends Element {
     }
 
     public boolean hitBoundary() {
-        return ((x - radius < 0) || (x + radius > Main.BG_WIDTH) || (y - radius < 0)) || (y + radius > Main.BG_HEIGHT); //TODO: delete the last condition
+        return ((x - radius < 0) || (x + radius > Level.BG_WIDTH) || (y - radius < 0)) || (y + radius > Level.BG_HEIGHT); //TODO: delete the last condition
 //        System.out.println("x + radius: " + (x + radius));
 //        System.out.println("x - radius: " + (x - radius));
 //        System.out.println("y + radius: " + (y + radius));
@@ -110,11 +110,11 @@ public class Ball extends Element {
     public void boundaryCollision() {
         if (x - radius < 0) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
-        } else if (x + radius > Main.BG_WIDTH) {
+        } else if (x + radius > Level.BG_WIDTH) {
             collisionDirection = CollisionDirection.RIGHTTOLEFT;
         } else if (y - radius < 0) {
             collisionDirection = CollisionDirection.UPTODOWN;
-        } else if (y + radius > Main.BG_HEIGHT) {  // TODO: delete this!
+        } else if (y + radius > Level.BG_HEIGHT) {  // TODO: delete this!
             collisionDirection = CollisionDirection.DOWNTOUP;
         } else {
             throw new IllegalStateException("There is no collision!");
