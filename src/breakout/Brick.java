@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Brick{
     public static final int BRICK_WIDTH = Main.BG_WIDTH / BrickPane.COL_NUM;
-    public static final int BRICK_HEIGHT = 20;
+    public static final int BRICK_HEIGHT = 30;
 
     public static final int UNREMOVABLE = 9;
 
@@ -24,7 +24,7 @@ public class Brick{
 
     public Brick(int level) {
         this.level = level;
-        rectangle = new Rectangle(BRICK_WIDTH, BRICK_HEIGHT);
+        rectangle = new Rectangle(BRICK_WIDTH - BrickPane.BRICK_GAP, BRICK_HEIGHT);
         setColor();
     }
 
@@ -73,4 +73,6 @@ public class Brick{
     public double getY() {
         return rectangle.getY();
     }
+
+
 }

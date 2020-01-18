@@ -23,20 +23,20 @@ import java.io.File;
 public class Main extends Application {
     public static final String HEART_IMAGE = "heart.gif";
 
-    public static final int PADDLE_OFFSET_BOTTOM = 200;
+    public static final int PADDLE_OFFSET_BOTTOM = 50;
     public static final Paint PADDLE_COLOR = Color.YELLOW;
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 10;
 
     public static final Paint BALL_COLOR = Color.AZURE;
-    public static final int BALL_RADIUS = 10;
+    public static final int BALL_RADIUS = 8;
 
     public static final int BALL_SPEED_NORMAL = 400;
     public static final int BALL_SPEED_FAST = 8;
     public static final int PADDLE_SPEED_NORMAL = 300;
 
     public static final int BG_HEIGHT = 500;
-    public static final int BG_WIDTH = 800;
+    public static final int BG_WIDTH = 500;
     public static final Paint BACKGROUND = Color.BLACK;
 
     public static final int FRAMES_PER_SECOND = 60;
@@ -90,6 +90,7 @@ public class Main extends Application {
         return scene;
     }
 
+
     private void handleKeyReleased(KeyCode code) {
         paddle.setMovingDirection(MovingDirection.STAY);
     }
@@ -104,8 +105,8 @@ public class Main extends Application {
             ball.paddleCollision();
         }
 
-        if (ball.hitBoundary(BG_WIDTH, BG_HEIGHT)) {
-            ball.boundaryCollision(BG_WIDTH, BG_HEIGHT);
+        if (ball.hitBoundary()) {
+            ball.boundaryCollision();
         }
 
         for(int r = 0; r < BrickPane.ROW_NUM; r++) {
@@ -133,6 +134,7 @@ public class Main extends Application {
                  break;
              case SPACE:
                  ball.setMovingDirection(MovingDirection.UPRIGHT);
+
              default:
                  break;
 

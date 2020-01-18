@@ -1,17 +1,18 @@
 package breakout;
 
+import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.TilePane;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 public class BrickPane {
 
-    public static final int BRICK_GAP = 2;
+    public static final int BRICK_GAP = 5;
     public static final int ROW_NUM = 8;
     public static final int COL_NUM = 6;
 
@@ -33,7 +34,7 @@ public class BrickPane {
 
         for (int r = 0; r < ROW_NUM; r++) {
             for (int c = 0; c < COL_NUM; c++) {
-                brickRepresentations[r][c] = Integer.valueOf(s.charAt(r * COL_NUM * 2 + r + c * 2)) - 48;
+                brickRepresentations[r][c] = (int) s.charAt(r * COL_NUM * 2 + r + c * 2) - 48;
             }
         }
     }
@@ -75,29 +76,21 @@ public class BrickPane {
     private void setupPane() {
         gridPane = new GridPane();
         gridPane.setPrefSize(Main.BG_WIDTH, Main.BG_HEIGHT);
-//        for (int i = 0; i < COL_NUM; i++) {
-//            ColumnConstraints c = new ColumnConstraints();
-//            c.setPercentWidth(100 / COL_NUM);
-//            gridPane.getColumnConstraints().add(c);
-//        }
+
         gridPane.setHgap(BRICK_GAP);
         gridPane.setVgap(BRICK_GAP);
 
+        for (int c = 0; c < COL_NUM; c++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints((double) (Main.BG_WIDTH - (COL_NUM - 1) * BRICK_GAP) / COL_NUM);
+            gridPane.getColumnConstraints().add(columnConstraints);
+        }
+
         for (int r = 0; r < ROW_NUM; r++) {
+            RowConstraints rowConstraints = new RowConstraints(Brick.BRICK_HEIGHT + (double) BRICK_GAP / 2);
+            gridPane.getRowConstraints().add(rowConstraints);
             for (int c = 0; c < COL_NUM; c++) {
                 if (bricks[r][c] != null) {
                     gridPane.add(bricks[r][c].getInstance(), c, r);
-                }
-            }
-        }
-    }
-
-    private void updataPane(Brick brick, int r, int c) {
-        for (var node: gridPane.getChildren()) {
-            if (gridPane.getRowIndex(node) == r && gridPane.getColumnIndex(node) == c) {
-                gridPane.getChildren().remove(node);
-                if (brick != null) {
-                    gridPane.add(brick.getInstance(), c, r);
                 }
             }
         }
@@ -112,9 +105,13 @@ public class BrickPane {
     }
 
     public void updateBrickStatus(int r, int c) {
+        gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == r && GridPane.getColumnIndex(node) == c);
+
         if (bricks[r][c].takeDamage()) {
             bricks[r][c] = null;
         }
-        updataPane(bricks[r][c], r, c);
+        if (bricks[r][c] != null) {
+            gridPane.add(bricks[r][c].getInstance(), c, r);
+        }
     }
 }

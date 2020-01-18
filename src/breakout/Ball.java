@@ -13,6 +13,7 @@ public class Ball extends Element {
     private Circle instance;
     private CollisionDirection collisionDirection;
 
+    public static final int ERROR = 1;
     public Ball(double x, double y, int alpha, int speed, double radius, Paint fill, MovingDirection direction) {
         super(x, y - radius, alpha, speed, fill, direction);
 
@@ -79,8 +80,8 @@ public class Ball extends Element {
         changeDirection();
     }
 
-    public boolean hitBoundary(int width, int height) {
-        return ((x - radius < 0) || (x + radius > width) || (y - radius < 0));
+    public boolean hitBoundary() {
+        return ((x - radius < 0) || (x + radius > Main.BG_WIDTH) || (y - radius < 0)) || (y + radius > Main.BG_HEIGHT); //TODO: delete the last condition
 //        System.out.println("x + radius: " + (x + radius));
 //        System.out.println("x - radius: " + (x - radius));
 //        System.out.println("y + radius: " + (y + radius));
@@ -106,13 +107,15 @@ public class Ball extends Element {
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    public void boundaryCollision(int width, int height) {
+    public void boundaryCollision() {
         if (x - radius < 0) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
-        } else if (x + radius > width) {
+        } else if (x + radius > Main.BG_WIDTH) {
             collisionDirection = CollisionDirection.RIGHTTOLEFT;
         } else if (y - radius < 0) {
             collisionDirection = CollisionDirection.UPTODOWN;
+        } else if (y + radius > Main.BG_HEIGHT) {  // TODO: delete this!
+            collisionDirection = CollisionDirection.DOWNTOUP;
         } else {
             throw new IllegalStateException("There is no collision!");
         }
@@ -122,11 +125,11 @@ public class Ball extends Element {
     public void brickCollision(Brick brick) {
         if (y + radius <= brick.getY()) {
             collisionDirection = CollisionDirection.DOWNTOUP;
-        } else if (y - radius >= brick.getY() + brick.BRICK_HEIGHT) {
+        } else if (y - radius >= brick.getY() + Brick.BRICK_HEIGHT) {
             collisionDirection = CollisionDirection.UPTODOWN;
         } else if (x < brick.getX()) {
             collisionDirection = CollisionDirection.RIGHTTOLEFT;
-        } else if (x > brick.getX() + brick.BRICK_WIDTH) {
+        } else if (x > brick.getX() + Brick.BRICK_WIDTH) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
         } else {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
