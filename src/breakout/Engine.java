@@ -87,6 +87,7 @@ public class Engine {
 
     public void createNewLevel() {
         finalScreenStage = false;
+        powerUps = new ArrayList<>();
         setupGame("map_level_" + level + ".txt");
     }
 
