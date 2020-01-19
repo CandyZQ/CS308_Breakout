@@ -1,10 +1,17 @@
 package breakout;
 
 import breakout.directions.MovingDirection;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Element {
+    public static final int PADDLE_OFFSET_BOTTOM = 50;
+    public static final Paint PADDLE_COLOR = Color.YELLOW;
+    public static final int PADDLE_WIDTH = 100;
+    public static final int PADDLE_HEIGHT = 10;
+    public static final int PADDLE_SPEED_NORMAL = 300;
+
     private int dx;
     private int da;
     private double width;
@@ -19,8 +26,8 @@ public class Paddle extends Element {
         makeShape();
     }
 
-    public Paddle(double x, double y, int speed, double width, double height, Paint fill) {
-        this(x, y, 0, speed, width, height, fill, MovingDirection.STAY);
+    public Paddle() {
+        this(Level.BG_WIDTH / 2 - PADDLE_WIDTH / 2, Level.BG_HEIGHT - PADDLE_OFFSET_BOTTOM, 0, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR, MovingDirection.STAY);
     }
 
     @Override

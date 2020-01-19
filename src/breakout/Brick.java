@@ -11,11 +11,11 @@ public class Brick{
 
     public static final int UNREMOVABLE = 9;
 
-    public static final Paint COLOR_LEVEL_ONE_BRICK = Color.MISTYROSE;
-    public static final Paint COLOR_LEVEL_TWO_BRICK = Color.LIGHTPINK;
-    public static final Paint COLOR_LEVEL_THREE_BRICK = Color.PINK;
-    public static final Paint COLOR_LEVEL_FOUR_BRICK = Color.PALEVIOLETRED;
-    public static final Paint COLOR_LEVEL_FIVE_BRICK = Color.SALMON;
+    public static final Paint COLOR_LEVEL_ONE_BRICK = Color.web("#fcdef0");
+    public static final Paint COLOR_LEVEL_TWO_BRICK = Color.web("#ffb0e1");
+    public static final Paint COLOR_LEVEL_THREE_BRICK = Color.web("#ff80ce");
+    public static final Paint COLOR_LEVEL_FOUR_BRICK = Color.web("#cd5a91");
+    public static final Paint COLOR_LEVEL_FIVE_BRICK = Color.web("#96304c");
     public static final Paint COLOR_UNREMOVABLE = Color.DARKGRAY;
 
     private int level;

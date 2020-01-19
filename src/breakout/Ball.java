@@ -2,10 +2,17 @@ package breakout;
 
 import breakout.directions.CollisionDirection;
 import breakout.directions.MovingDirection;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class Ball extends Element {
+    public static final Paint BALL_COLOR = Color.AZURE;
+    public static final int BALL_RADIUS = 8;
+
+    public static final int BALL_SPEED_NORMAL = 400;
+    public static final int BALL_SPEED_FAST = 8;
+
     private double dx;
     private double dy;
     private double radius;
@@ -13,17 +20,15 @@ public class Ball extends Element {
     private Circle instance;
     private CollisionDirection collisionDirection;
 
-    public static final int ERROR = 1;
     public Ball(double x, double y, int alpha, int speed, double radius, Paint fill, MovingDirection direction) {
         super(x, y - radius, alpha, speed, fill, direction);
-
         this.radius = radius;
         makeShape();
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    public Ball(double x, double y, int speed, double radius, Paint fill) {
-        this(x, y, 60, speed, radius, fill, MovingDirection.STAY);
+    public Ball() {
+        this((double) Level.BG_WIDTH / 2, Level.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 60, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
     }
 
     @Override
@@ -67,8 +72,6 @@ public class Ball extends Element {
     }
 
     public void move(double elapsedTime) {
-//        System.out.println("dx: " + dx);
-//        System.out.println("dy: " + dy);
         x = instance.getCenterX() + dx * elapsedTime * speed;
         y = instance.getCenterY() + dy * elapsedTime * speed;
         instance.setCenterX(x);
@@ -82,9 +85,6 @@ public class Ball extends Element {
 
     public boolean hitBoundary() {
         return ((x - radius < 0) || (x + radius > Level.BG_WIDTH) || (y - radius < 0)) || (y + radius > Level.BG_HEIGHT); //TODO: delete the last condition
-//        System.out.println("x + radius: " + (x + radius));
-//        System.out.println("x - radius: " + (x - radius));
-//        System.out.println("y + radius: " + (y + radius));
     }
 
     public void changeDirection() {
