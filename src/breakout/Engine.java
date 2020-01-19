@@ -5,6 +5,7 @@ import breakout.directions.RotationDirection;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,9 +19,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.File;
-
-// TODO: ball goes out of border
-// TODO: press A/D before start has unexpected behavior
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Engine {
 
@@ -41,6 +42,7 @@ public class Engine {
 
     private int level = 1;
     private int life = 3;
+    private int ballSpeedFastCycle = 0;
 
     boolean hasStarted;
     boolean finalScreenStage;
@@ -53,10 +55,12 @@ public class Engine {
     private Text text;
     private Group root;
     private Scene scene;
+    private List<PowerUp> powerUps;
 
     public Engine(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.finalScreenStage = false;
+        powerUps = new ArrayList<>();
         root = new Group();
     }
 
@@ -84,7 +88,6 @@ public class Engine {
     public void createNewLevel() {
         finalScreenStage = false;
         setupGame("map_level_" + level + ".txt");
-        setStage();
     }
 
     public void addFrame() {
@@ -111,6 +114,23 @@ public class Engine {
         root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
         updateStatus();
 
+        setUpLevelScene();
+        setStage();
+    }
+
+    public void setPowerUpScene() {
+        root = new Group();
+        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
+
+        for (PowerUp p: powerUps) {
+            root.getChildren().add(p.getInstance());
+        }
+        updateStatus();
+        setUpLevelScene();
+        setStage();
+    }
+
+    private void setUpLevelScene() {
         scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));
@@ -121,7 +141,8 @@ public class Engine {
             root.getChildren().remove(text);
         }
         text = new Text(TEXT_LEFT_PADDING, BG_HEIGHT - TEXT_BUTTON_PADDING,
-                "Current Level: " + level + "          Lives Left: " + life);
+                "Current Level: " + level +
+                        "                                      Lives Left: " + life);
         text.setFont(new Font(20));
 
         root.getChildren().add(text);
@@ -130,12 +151,23 @@ public class Engine {
     private void step(double elapsedTime) {
         ball.move(elapsedTime, paddle.getAngle());
         paddle.move(elapsedTime);
+        for (PowerUp p: powerUps) {
+            p.move(elapsedTime);
+        }
+
+        if (ball.isSpeedFast()) {
+            ballSpeedFastCycle += 1;
+            if (ballSpeedFastCycle == Ball.BALL_SPEED_UP_CYCLE) {
+                ball.setBallSpeedNormal();
+            }
+        }
 
         if (!finalScreenStage) {
             // collision check
             checkBoundaryCollision();
             checkPaddleCollision();
             checkBricksCollision();
+            checkPowerUpCollision();
 
             // check end-level/game status
             if (isEndLevel()) {
@@ -151,6 +183,45 @@ public class Engine {
             if (isWin()) {
                 createFinalScreen("Win");
             }
+        }
+    }
+
+    private void checkPowerUpCollision() {
+        for (Iterator<PowerUp> itr = powerUps.iterator(); itr.hasNext();) {
+            PowerUp p = itr.next();
+            if (p.getInstance().getBoundsInParent().intersects(paddle.getInstance().getBoundsInParent())) {
+                handleEffect(p.getType());
+                itr.remove();
+                setPowerUpScene();
+            }
+        }
+    }
+
+    private void handleEffect(PowerUpType type) {
+        switch (type) {
+            case LIFE:
+                life += 1;
+                updateStatus();
+                break;
+            case BALL_SPEEDUP:
+                ball.setBallSpeedFast();
+                break;
+            case BOMB:
+                boolean end = false;
+                for (int r = 0; r < BrickPane.ROW_NUM; r++) {
+                    for (int c = 0; c < BrickPane.COL_NUM; c++) {
+                        if (bricks.getBricks()[r][c] != null) {
+                            end = true;
+                            bricks.checkPowerUp(r, c);
+                            bricks.updateBrickStatus(r, c);
+                            break;
+                        }
+                    }
+                    if (end) break;
+                    }
+                break;
+            default:
+                break;
         }
     }
 
@@ -213,6 +284,11 @@ public class Engine {
 
                     if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
                         ball.brickCollision(brick);
+                        PowerUp powerUp = bricks.checkPowerUp(r, c);
+                        if (powerUp != null) {
+                            powerUps.add(powerUp);
+                            setPowerUpScene();
+                        }
                         bricks.updateBrickStatus(r, c);
                     }
                 }

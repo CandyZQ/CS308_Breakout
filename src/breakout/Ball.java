@@ -11,7 +11,8 @@ public class Ball extends Element {
     public static final int BALL_RADIUS = 8;
 
     public static final int BALL_SPEED_NORMAL = 400;
-    public static final int BALL_SPEED_FAST = 8;
+    public static final int BALL_SPEED_FAST = 800;
+    public static final int BALL_SPEED_UP_CYCLE = 200;
 
     private double dx;
     private double dy;
@@ -65,8 +66,8 @@ public class Ball extends Element {
             default:
                 break;
         }
-        System.out.println("dx: " + dx);
-        System.out.println("dy: " + dy);
+//        System.out.println("dx: " + dx);
+//        System.out.println("dy: " + dy);
     }
 
     @Override
@@ -98,26 +99,26 @@ public class Ball extends Element {
     }
 
     public boolean hitBoundary() {
-        System.out.println("x: " + x);
-        System.out.println("y: " + y);
+//        System.out.println("x: " + x);
+//        System.out.println("y: " + y);
         return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) || (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT); //TODO: delete the last condition
     }
 
     public void changeDirection() {
         switch (collisionDirection) {
             case LEFTTORIGHT:
-                System.out.println("LEFTTORIGHT");
-                System.out.println("Moving direction: " + movingDirection);
-                System.out.println("Angle: " + angle);
+//                System.out.println("LEFTTORIGHT");
+//                System.out.println("Moving direction: " + movingDirection);
+//                System.out.println("Angle: " + angle);
                 movingDirection = movingDirection == MovingDirection.UPLEFT ? MovingDirection.UPRIGHT : MovingDirection.DOWNRIGHT;
                 break;
             case UPTODOWN:
                 movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.DOWNRIGHT : MovingDirection.DOWNLEFT;
                 break;
             case RIGHTTOLEFT:
-                System.out.println("RIGHTOTLEFT");
-                System.out.println("Moving direction: " + movingDirection);
-                System.out.println("Angle: " + angle);
+//                System.out.println("RIGHTOTLEFT");
+//                System.out.println("Moving direction: " + movingDirection);
+//                System.out.println("Angle: " + angle);
                 movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.UPLEFT : MovingDirection.DOWNLEFT;
                 break;
             case DOWNTOUP:
@@ -163,5 +164,17 @@ public class Ball extends Element {
             System.out.println("Warning: Invalid Brick Collision!");
         }
         changeDirection();
+    }
+
+    public void setBallSpeedFast() {
+        speed = BALL_SPEED_FAST;
+    }
+
+    public void setBallSpeedNormal() {
+        speed = BALL_SPEED_NORMAL;
+    }
+
+    public boolean isSpeedFast() {
+        return speed == BALL_SPEED_FAST;
     }
 }

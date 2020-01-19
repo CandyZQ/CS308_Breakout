@@ -107,11 +107,19 @@ public class BrickPane {
     public void updateBrickStatus(int r, int c) {
         gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == r && GridPane.getColumnIndex(node) == c);
 
-        if (bricks[r][c].takeDamage()) {
-            bricks[r][c] = null;
-        }
         if (bricks[r][c] != null) {
             gridPane.add(bricks[r][c].getInstance(), c, r);
         }
+    }
+
+    public PowerUp checkPowerUp(int r, int c) {
+        PowerUp powerUp = null;
+        if (bricks[r][c].takeDamage()) {
+            if (bricks[r][c].hasPowerUp()) {
+                powerUp = bricks[r][c].getPowerUp();
+            }
+            bricks[r][c] = null;
+        }
+        return powerUp;
     }
 }
