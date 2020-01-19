@@ -67,7 +67,7 @@ public class BrickPane {
                 if (brickRepresentations[r][c] == 0) {
                     bricks[r][c] = null;
                 } else {
-                    bricks[r][c] = new Brick(brickRepresentations[r][c]);
+                    bricks[r][c] = new Brick(brickRepresentations[r][c], r, c);
                 }
             }
         }

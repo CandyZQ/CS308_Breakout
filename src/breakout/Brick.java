@@ -28,18 +28,17 @@ public class Brick{
     private PowerUp powerUp;
 
 
-    public Brick(int level) {
+    public Brick(int level, int row, int col) {
         this.level = level;
         rectangle = new Rectangle(BRICK_WIDTH - BrickPane.BRICK_GAP, BRICK_HEIGHT);
         setColor();
-        setupPowerUp();
+        setupPowerUp(row, col);
     }
 
-    private void setupPowerUp() {
+    private void setupPowerUp(int row, int col) {
         int d = new Random().nextInt(POWER_UP_CHANCE);
         if (d < PowerUp.POWER_UP_NUMBER) {
-            Bounds boundsInScene = rectangle.getLayoutBounds();  // TODO: change this
-            powerUp = new PowerUp(d, boundsInScene.getMaxX(), boundsInScene.getMaxY());
+            powerUp = new PowerUp(d, BRICK_WIDTH * (col + 0.3), BRICK_HEIGHT * (row + 0.3));
         } else {
             powerUp = null;
         }
