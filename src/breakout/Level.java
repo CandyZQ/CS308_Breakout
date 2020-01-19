@@ -27,6 +27,8 @@ public class Level {
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
     private int level = 1;
+    private int life = 3;
+
     boolean hasStarted;
 
     private Ball ball;
@@ -34,6 +36,7 @@ public class Level {
     private Paddle paddle;
     private Stage primaryStage;
     private Text text;
+    private Group root;
 
     public Level(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -56,15 +59,17 @@ public class Level {
     }
 
     public Scene setupGame(String filename) {
-        Group root = new Group();
+        root = new Group();
 
         paddle = new Paddle();
         ball = new Ball();
         bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + filename);
-        text = new Text(TEXT_LEFT_PADDING, Main.BG_HEIGHT - TEXT_BUTTON_PADDING, "Current Level: " + level);
-        text.setFont(new Font(20));
+//        text = new Text(TEXT_LEFT_PADDING, Main.BG_HEIGHT - TEXT_BUTTON_PADDING,
+//                "Current Level: " + level + "          Lives Left: " + life);
+//        text.setFont(new Font(20));
 
-        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance(), text);
+        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
+        updateStatus();
 
         Scene scene = new Scene(root, Main.BG_WIDTH, Main.BG_HEIGHT, Main.BACKGROUND);
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -72,6 +77,74 @@ public class Level {
         return scene;
     }
 
+    private void updateStatus() {
+        if (text != null) {
+            root.getChildren().remove(text);
+        }
+        text = new Text(TEXT_LEFT_PADDING, Main.BG_HEIGHT - TEXT_BUTTON_PADDING,
+                "Current Level: " + level + "          Lives Left: " + life);
+        text.setFont(new Font(20));
+
+        root.getChildren().add(text);
+    }
+
+    public void step(double elapsedTime) {
+        ball.move(elapsedTime);
+        paddle.move(elapsedTime, Main.BG_WIDTH);
+
+        // collision check
+        checkPaddleCollision();
+        checkBoundaryCollision();
+        checkBricksCollision();
+
+        if (isEndLevel()) {
+            level += 1;
+            hasStarted = false;
+            createNewLevel();
+        }
+    }
+
+    public boolean isEndLevel() {
+        for (int r = 0; r < BrickPane.ROW_NUM; r++) {
+            for (int c = 0; c < BrickPane.COL_NUM; c++) {
+                Brick brick = bricks.getBricks()[r][c];
+                if (brick != null) return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkBoundaryCollision() {
+        if (ball.hitBoundary()) {
+            if (!ball.boundaryCollision()) {
+                life -= 1;
+                updateStatus();
+            }
+        }
+    }
+
+    private void checkPaddleCollision() {
+        Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
+        if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
+            ball.paddleCollision();
+        }
+    }
+
+    private void checkBricksCollision() {
+        for (int r = 0; r < BrickPane.ROW_NUM; r++) {
+            for (int c = 0; c < BrickPane.COL_NUM; c++) {
+                Brick brick = bricks.getBricks()[r][c];
+                if (brick != null) {
+                    Shape ballBrickIntersection = Shape.intersect(ball.getInstance(), brick.getInstance());
+
+                    if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
+                        ball.brickCollision(brick);
+                        bricks.updateBrickStatus(r, c);
+                    }
+                }
+            }
+        }
+    }
     private void handleKeyReleased(KeyCode code) {
         paddle.setMovingDirection(MovingDirection.STAY);
     }
@@ -119,64 +192,16 @@ public class Level {
                 hasStarted = false;
                 createNewLevel();
                 break;
+
+            // cheat key - life
+            case A:
+                life = 99;
+                break;
+
             default:
                 break;
         }
     }
 
-    public void step(double elapsedTime) {
-        ball.move(elapsedTime);
-        paddle.move(elapsedTime, Main.BG_WIDTH);
 
-        // collision check
-        checkPaddleCollision();
-        checkBoundaryCollision();
-        checkBricksCollision();
-
-        if (isEndLevel()) {
-            level += 1;
-            hasStarted = false;
-            createNewLevel();
-        }
-    }
-
-
-    public boolean isEndLevel() {
-        for (int r = 0; r < BrickPane.ROW_NUM; r++) {
-            for (int c = 0; c < BrickPane.COL_NUM; c++) {
-                Brick brick = bricks.getBricks()[r][c];
-                if (brick != null) return false;
-            }
-        }
-        return true;
-    }
-
-    private void checkBoundaryCollision() {
-        if (ball.hitBoundary()) {
-            ball.boundaryCollision();
-        }
-    }
-
-    private void checkPaddleCollision() {
-        Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
-        if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
-            ball.paddleCollision();
-        }
-    }
-
-    private void checkBricksCollision() {
-        for (int r = 0; r < BrickPane.ROW_NUM; r++) {
-            for (int c = 0; c < BrickPane.COL_NUM; c++) {
-                Brick brick = bricks.getBricks()[r][c];
-                if (brick != null) {
-                    Shape ballBrickIntersection = Shape.intersect(ball.getInstance(), brick.getInstance());
-
-                    if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
-                        ball.brickCollision(brick);
-                        bricks.updateBrickStatus(r, c);
-                    }
-                }
-            }
-        }
-    }
 }

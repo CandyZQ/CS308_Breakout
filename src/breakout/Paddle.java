@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Element {
-    public static final int PADDLE_OFFSET_BOTTOM = 50;
+    public static final int PADDLE_OFFSET_BOTTOM = 80;
     public static final Paint PADDLE_COLOR = Color.CORAL;
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 10;

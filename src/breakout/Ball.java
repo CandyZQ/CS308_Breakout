@@ -107,7 +107,8 @@ public class Ball extends Element {
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    public void boundaryCollision() {
+    // return true if collide a boundary, false if died
+    public boolean boundaryCollision() {
         if (x - radius < 0) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
         } else if (x + radius > Main.BG_WIDTH) {
@@ -116,10 +117,13 @@ public class Ball extends Element {
             collisionDirection = CollisionDirection.UPTODOWN;
         } else if (y + radius > Main.BG_HEIGHT) {  // TODO: delete this!
             collisionDirection = CollisionDirection.DOWNTOUP;
+            changeDirection();
+            return false;
         } else {
             throw new IllegalStateException("There is no collision!");
         }
         changeDirection();
+        return true;
     }
 
     public void brickCollision(Brick brick) {
