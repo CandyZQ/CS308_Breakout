@@ -11,6 +11,7 @@ public class Ball extends Element {
     public static final int BALL_RADIUS = 8;
 
     public static final int BALL_SPEED_NORMAL = 400;
+    public static final int BALL_SPEED_INCREMENT = 600;
     public static final int BALL_SPEED_FAST = 800;
     public static final int BALL_SPEED_UP_CYCLE = 200;
 
@@ -86,13 +87,10 @@ public class Ball extends Element {
         instance.setCenterY(y);
     }
 
-    public void move(double elapsedTime, double alpha) {
-        move(elapsedTime);
-
-        // ball angle update because of paddle rotation
-    }
-
-    public void paddleCollision(double alpha) {
+    public void paddleCollision(double alpha, double paddleX) {
+        if (x <= (paddleX + Paddle.PADDLE_WIDTH / 4.0) || x >= (paddleX + Paddle.PADDLE_WIDTH / 4.0 * 3)) {
+            speed = BALL_SPEED_INCREMENT;
+        }
         collisionDirection = CollisionDirection.DOWNTOUP;
         angle = movingDirection == MovingDirection.DOWNRIGHT ? initialAngle + alpha : initialAngle - alpha;
         changeDirection();
@@ -151,6 +149,7 @@ public class Ball extends Element {
     }
 
     public void brickCollision(Brick brick) {
+        if (isSpeedIncreamented()) setBallSpeedNormal();
         if (y + radius <= brick.getY()) {
             collisionDirection = CollisionDirection.DOWNTOUP;
         } else if (y - radius >= brick.getY() + Brick.BRICK_HEIGHT) {
@@ -176,5 +175,9 @@ public class Ball extends Element {
 
     public boolean isSpeedFast() {
         return speed == BALL_SPEED_FAST;
+    }
+
+    public boolean isSpeedIncreamented() {
+        return speed == BALL_SPEED_INCREMENT;
     }
 }

@@ -73,7 +73,7 @@ public class Engine {
         text.setFont(new Font(20));
         text.setTextAlignment(TextAlignment.RIGHT);
 
-        root.getChildren().addAll(title, text, new Ball().getInstance(), new Paddle().getInstance(),
+        root.getChildren().addAll(title, text, new Ball().getInstance(), new Paddle(level).getInstance(),
                 new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + "map_level_0.txt").getInstance());
 
         scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
@@ -108,7 +108,7 @@ public class Engine {
     public void setupGame(String filename) {
         root = new Group();
 
-        paddle = new Paddle();
+        paddle = new Paddle(level);
         ball = new Ball();
         bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + filename);
         root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
@@ -149,7 +149,7 @@ public class Engine {
     }
 
     private void step(double elapsedTime) {
-        ball.move(elapsedTime, paddle.getAngle());
+        ball.move(elapsedTime);
         paddle.move(elapsedTime);
         for (PowerUp p: powerUps) {
             p.move(elapsedTime);
@@ -233,7 +233,7 @@ public class Engine {
         text.setTextAlignment(TextAlignment.RIGHT);
 
         root = new Group();
-        root.getChildren().addAll(text, new Ball().getInstance(), new Paddle().getInstance());
+        root.getChildren().addAll(text, new Ball().getInstance(), new Paddle(level).getInstance());
 
         scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
         scene.setOnKeyPressed(e -> handCheatKeyInput(e.getCode()));
@@ -271,7 +271,7 @@ public class Engine {
     private void checkPaddleCollision() {
         Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
         if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
-            ball.paddleCollision(paddle.getAngle());
+            ball.paddleCollision(paddle.getAngle(), paddle.getX());
         }
     }
 
@@ -281,8 +281,8 @@ public class Engine {
                 Brick brick = bricks.getBricks()[r][c];
                 if (brick != null) {
                     Shape ballBrickIntersection = Shape.intersect(ball.getInstance(), brick.getInstance());
-
                     if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
+
                         ball.brickCollision(brick);
                         PowerUp powerUp = bricks.checkPowerUp(r, c);
                         if (powerUp != null) {

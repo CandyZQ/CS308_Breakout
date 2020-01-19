@@ -1,8 +1,5 @@
 package breakout;
 
-
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -14,7 +11,7 @@ public class Brick{
     public static final int BRICK_HEIGHT = 30;
 
     public static final int UNREMOVABLE = 9;
-    public static final int POWER_UP_CHANCE = 3;
+    public static final int POWER_UP_CHANCE = 10;
 
     public static final Paint COLOR_LEVEL_ONE_BRICK = Color.web("#fcdef0");
     public static final Paint COLOR_LEVEL_TWO_BRICK = Color.web("#ffb0e1");
