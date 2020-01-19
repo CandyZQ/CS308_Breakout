@@ -1,6 +1,7 @@
 package breakout;
 
 import breakout.directions.MovingDirection;
+import breakout.directions.RotationDirection;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -16,8 +17,10 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.io.File;
+
+// TODO: ball goes out of border
+// TODO: press A/D before start has unexpected behavior
 
 public class Engine {
 
@@ -125,13 +128,13 @@ public class Engine {
     }
 
     private void step(double elapsedTime) {
-        ball.move(elapsedTime);
-        paddle.move(elapsedTime, BG_WIDTH);
+        ball.move(elapsedTime, paddle.getAngle());
+        paddle.move(elapsedTime);
 
         if (!finalScreenStage) {
             // collision check
-            checkPaddleCollision();
             checkBoundaryCollision();
+            checkPaddleCollision();
             checkBricksCollision();
 
             // check end-level/game status
@@ -178,7 +181,7 @@ public class Engine {
     }
 
     private boolean isWin() {
-        return level == NUM_LEVEL;
+        return level > NUM_LEVEL;
     }
 
     public boolean isDead() {
@@ -197,7 +200,7 @@ public class Engine {
     private void checkPaddleCollision() {
         Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
         if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
-            ball.paddleCollision();
+            ball.paddleCollision(paddle.getAngle());
         }
     }
 
@@ -218,26 +221,32 @@ public class Engine {
     }
     private void handleKeyReleased(KeyCode code) {
         paddle.setMovingDirection(MovingDirection.STAY);
+        paddle.setRotationDirection(RotationDirection.FLOATING);
     }
 
     private void handleKeyInput (KeyCode code) {
-        switch (code) {
-            case RIGHT:
-                if (hasStarted) {
+        if (hasStarted) {
+            switch (code) {
+                case RIGHT:
                     paddle.setMovingDirection(MovingDirection.RIGHT);
-                }
-                break;
-            case LEFT:
-                if (hasStarted) {
+                    break;
+                case LEFT:
                     paddle.setMovingDirection(MovingDirection.LEFT);
-                }
-                break;
-            case SPACE:
-                hasStarted = true;
-                ball.setMovingDirection(MovingDirection.UPRIGHT);
-                break;
-            default:
-                break;
+                    break;
+                case A:
+                    paddle.setRotationDirection(RotationDirection.CCW);
+                    break;
+                case D:
+                    paddle.setRotationDirection(RotationDirection.CC);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (code == KeyCode.SPACE) {
+            hasStarted = true;
+            ball.setMovingDirection(MovingDirection.UPRIGHT);
         }
         handCheatKeyInput(code);
     }

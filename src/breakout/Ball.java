@@ -19,16 +19,18 @@ public class Ball extends Element {
 
     private Circle instance;
     private CollisionDirection collisionDirection;
+    private double initialAngle;
 
-    public Ball(double x, double y, int alpha, int speed, double radius, Paint fill, MovingDirection direction) {
-        super(x, y - radius, alpha, speed, fill, direction);
+    public Ball(double x, double y, double angle, int speed, double radius, Paint fill, MovingDirection direction) {
+        super(x, y - radius, angle, speed, fill, direction);
+        initialAngle = angle;
         this.radius = radius;
         makeShape();
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
     public Ball() {
-        this((double) Engine.BG_WIDTH / 2, Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 60, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
+        this((double) Engine.BG_WIDTH / 2, Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 30, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
     }
 
     @Override
@@ -39,8 +41,8 @@ public class Ball extends Element {
 
     @Override
     public void updateMovingDirection() {
-        dx = Math.cos(Math.toRadians(alpha));
-        dy = Math.sin(Math.toRadians(alpha));
+        dx = Math.sin(Math.toRadians(Math.abs(angle)));
+        dy = Math.cos(Math.toRadians(Math.abs(angle)));
 
         switch (movingDirection) {
             case UPRIGHT:
@@ -52,15 +54,19 @@ public class Ball extends Element {
                 break;
             case DOWNLEFT:
                 dx = -dx;
+                break;
             case DOWNRIGHT:
                 // Do not have to change
                 break;
             case STAY:
                 dx = 0;
                 dy = 0;
+                break;
             default:
                 break;
         }
+        System.out.println("dx: " + dx);
+        System.out.println("dy: " + dy);
     }
 
     @Override
@@ -71,6 +77,7 @@ public class Ball extends Element {
         return instance;
     }
 
+    @Override
     public void move(double elapsedTime) {
         x = instance.getCenterX() + dx * elapsedTime * speed;
         y = instance.getCenterY() + dy * elapsedTime * speed;
@@ -78,28 +85,44 @@ public class Ball extends Element {
         instance.setCenterY(y);
     }
 
-    public void paddleCollision() {
+    public void move(double elapsedTime, double alpha) {
+        move(elapsedTime);
+
+        // ball angle update because of paddle rotation
+    }
+
+    public void paddleCollision(double alpha) {
         collisionDirection = CollisionDirection.DOWNTOUP;
+        angle = movingDirection == MovingDirection.DOWNRIGHT ? initialAngle + alpha : initialAngle - alpha;
         changeDirection();
     }
 
     public boolean hitBoundary() {
+        System.out.println("x: " + x);
+        System.out.println("y: " + y);
         return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) || (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT); //TODO: delete the last condition
     }
 
     public void changeDirection() {
         switch (collisionDirection) {
             case LEFTTORIGHT:
+                System.out.println("LEFTTORIGHT");
+                System.out.println("Moving direction: " + movingDirection);
+                System.out.println("Angle: " + angle);
                 movingDirection = movingDirection == MovingDirection.UPLEFT ? MovingDirection.UPRIGHT : MovingDirection.DOWNRIGHT;
                 break;
             case UPTODOWN:
                 movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.DOWNRIGHT : MovingDirection.DOWNLEFT;
                 break;
             case RIGHTTOLEFT:
+                System.out.println("RIGHTOTLEFT");
+                System.out.println("Moving direction: " + movingDirection);
+                System.out.println("Angle: " + angle);
                 movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.UPLEFT : MovingDirection.DOWNLEFT;
                 break;
             case DOWNTOUP:
                 movingDirection = movingDirection == MovingDirection.DOWNLEFT ? MovingDirection.UPLEFT : MovingDirection.UPRIGHT;
+                break;
             default:
                 break;
         }
@@ -107,7 +130,7 @@ public class Ball extends Element {
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    // return true if collide a boundary, false if died
+    // return true if collide a boundary, false if dead
     public boolean boundaryCollision() {
         if (x - radius < 0) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
@@ -116,7 +139,7 @@ public class Ball extends Element {
         } else if (y - radius < 0) {
             collisionDirection = CollisionDirection.UPTODOWN;
         } else if (y + radius > Engine.BG_HEIGHT) {
-//            collisionDirection = CollisionDirection.DOWNTOUP; // TODO: delete this!
+            collisionDirection = CollisionDirection.DOWNTOUP; // TODO: delete this!
             changeDirection();
             return false;
         } else {

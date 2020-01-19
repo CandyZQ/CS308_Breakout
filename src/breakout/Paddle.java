@@ -1,16 +1,22 @@
 package breakout;
 
 import breakout.directions.MovingDirection;
+import breakout.directions.RotationDirection;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 
 public class Paddle extends Element {
     public static final int PADDLE_OFFSET_BOTTOM = 80;
     public static final Paint PADDLE_COLOR = Color.CORAL;
+
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 10;
     public static final int PADDLE_SPEED_NORMAL = 300;
+    public static final int PADDLE_ROTATION_SPEED = 100;
+
+    public static final double MAX_ANGLE = 40;
 
     private int dx;
     private int da;
@@ -18,11 +24,13 @@ public class Paddle extends Element {
     private double height;
 
     private Rectangle instance;
+    private Rotate rotate;
 
-    public Paddle(double x, double y, int angle, int speed, double width, double height, Paint fill, MovingDirection direction) {
+    public Paddle(double x, double y, double angle, int speed, double width, double height, Paint fill, MovingDirection direction) {
         super(x, y, angle, speed, fill, direction);
         this.width = width;
         this.height = height;
+        rotate = new Rotate();
         makeShape();
     }
 
@@ -46,6 +54,22 @@ public class Paddle extends Element {
         }
     }
 
+    public void setRotationDirection(RotationDirection rotationDirection) {
+        switch (rotationDirection) {
+            case CC:
+                da = 1;
+                break;
+            case CCW:
+                da = -1;
+                break;
+            case FLOATING:
+                da = 0;
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void makeShape() {
         instance = new Rectangle(x, y, width, height);
@@ -60,14 +84,27 @@ public class Paddle extends Element {
         return instance;
     }
 
-    public void move(double elapsedTime, int sceneWidth) {
+    @Override
+    public void move(double elapsedTime) {
+        // movement
         x = instance.getX() + dx * elapsedTime * speed;
-        x = x + width > sceneWidth ? sceneWidth - width: x;
+        x = x + width > Engine.BG_WIDTH ? Engine.BG_WIDTH - width: x;
         x = x < 0 ? 0 : x;
         instance.setX(x);
+
+        instance.getTransforms().remove(rotate);
+        // rotation
+        angle = angle + da * elapsedTime * PADDLE_ROTATION_SPEED;
+        if (Math.abs(angle) > MAX_ANGLE) {
+            angle = angle > 0 ? MAX_ANGLE : -MAX_ANGLE;
+        }
+        rotate.setAngle(angle);
+        rotate.setPivotX(x + (double) PADDLE_WIDTH / 2);
+        rotate.setPivotY(y + PADDLE_HEIGHT);
+        instance.getTransforms().add(rotate);
     }
 
-    public double getHeight() {
-        return height;
+    public double getAngle() {
+        return angle;
     }
 }

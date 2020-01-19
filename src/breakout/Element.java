@@ -7,17 +7,17 @@ import javafx.scene.shape.Shape;
 public abstract class Element {
     double x;
     double y;
-    int alpha;
+    double angle;
     int speed;
     Paint fill;
 
     MovingDirection movingDirection;
 
-    public Element(double x, double y, int alpha, int speed, Paint fill, MovingDirection movingDirection) {
+    public Element(double x, double y, double angle, int speed, Paint fill, MovingDirection movingDirection) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        this.alpha = alpha;
+        this.angle = angle;
         this.movingDirection = movingDirection;
         this.fill = fill;
         updateMovingDirection();
@@ -32,4 +32,5 @@ public abstract class Element {
     }
 
     public abstract void updateMovingDirection();
+    public abstract void move(double elapsedTime);
 }
