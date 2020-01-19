@@ -40,6 +40,7 @@ public class Engine {
     private int life = 3;
 
     boolean hasStarted;
+    boolean finalScreenStage;
 
     private Ball ball;
     private BrickPane bricks;
@@ -52,6 +53,7 @@ public class Engine {
 
     public Engine(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        this.finalScreenStage = false;
         root = new Group();
     }
 
@@ -77,6 +79,7 @@ public class Engine {
     }
 
     public void createNewLevel() {
+        finalScreenStage = false;
         setupGame("map_level_" + level + ".txt");
         setStage();
     }
@@ -125,28 +128,32 @@ public class Engine {
         ball.move(elapsedTime);
         paddle.move(elapsedTime, BG_WIDTH);
 
-        // collision check
-        checkPaddleCollision();
-        checkBoundaryCollision();
-        checkBricksCollision();
+        if (!finalScreenStage) {
+            // collision check
+            checkPaddleCollision();
+            checkBoundaryCollision();
+            checkBricksCollision();
 
-        // check end-level/game status
-        if (isEndLevel()) {
-            level += 1;
-            hasStarted = false;
-            createNewLevel();
-        }
+            // check end-level/game status
+            if (isEndLevel()) {
+                level += 1;
+                hasStarted = false;
+                createNewLevel();
+            }
 
-        if (isDead()) {
-            createFinalScreen("Lose");
-        }
+            if (isDead()) {
+                createFinalScreen("Lose");
+            }
 
-        if (isWin()) {
-            createFinalScreen("Win");
+            if (isWin()) {
+                createFinalScreen("Win");
+            }
         }
     }
 
     private void createFinalScreen(String message) {
+        finalScreenStage = true;
+
         Text text = new Text(BG_WIDTH / 2 - TITLE_PADDING, BG_HEIGHT / 2 + 50, "You " + message + " !");
         text.setFont(new Font(30));
         text.setTextAlignment(TextAlignment.RIGHT);
