@@ -27,7 +27,7 @@ public class Paddle extends Element {
     }
 
     public Paddle() {
-        this(Main.BG_WIDTH / 2 - PADDLE_WIDTH / 2, Main.BG_HEIGHT - PADDLE_OFFSET_BOTTOM, 0, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR, MovingDirection.STAY);
+        this(Engine.BG_WIDTH / 2 - PADDLE_WIDTH / 2, Engine.BG_HEIGHT - PADDLE_OFFSET_BOTTOM, 0, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR, MovingDirection.STAY);
     }
 
     @Override

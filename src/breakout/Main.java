@@ -18,14 +18,8 @@ import java.io.File;
  * Feel free to completely change this code or delete it entirely. 
  */
 public class Main extends Application {
-    Level currentLevel;
+    Engine engine;
 
-    public static final int BG_HEIGHT = 500;
-    public static final int BG_WIDTH = 500;
-    public static final Paint BACKGROUND = Color.WHITE;
-
-    public static final int TITLE_PADDING = 60;
-    public static final int TEXT_PADDING = 30;
 
     /**
      * Start of the program.
@@ -36,33 +30,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        currentLevel = new Level(primaryStage);
-        primaryStage.setTitle("B-Breaker");
-        primaryStage.setScene(createSplashScreen());
-        primaryStage.show();
+        engine = new Engine(primaryStage);
+        engine.createSplashScreen();
     }
 
-    private Scene createSplashScreen() {
-        Group root = new Group();
 
-        Text title = new Text(BG_WIDTH / 2 - TITLE_PADDING, BG_HEIGHT / 2, "B-Breaker");
-        title.setFont(new Font(30));
-        title.setTextAlignment(TextAlignment.RIGHT);
-
-        Text text = new Text(BG_WIDTH / 2 - TITLE_PADDING - TEXT_PADDING, BG_HEIGHT / 2 + 50, "Press any key to start");
-        text.setFont(new Font(20));
-        text.setTextAlignment(TextAlignment.RIGHT);
-
-
-        root.getChildren().addAll(title, text, new Ball().getInstance(), new Paddle().getInstance(),
-                new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + "map_level_0.txt").getInstance());
-
-        Scene scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
-        scene.addEventFilter(KeyEvent.ANY, keyEvent -> {
-            currentLevel.createNewLevel();
-            currentLevel.addFrame();
-        });
-        return scene;
-    }
 
 }

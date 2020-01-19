@@ -28,7 +28,7 @@ public class Ball extends Element {
     }
 
     public Ball() {
-        this((double) Main.BG_WIDTH / 2, Main.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 60, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
+        this((double) Engine.BG_WIDTH / 2, Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 60, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Ball extends Element {
     }
 
     public boolean hitBoundary() {
-        return ((x - radius < 0) || (x + radius > Main.BG_WIDTH) || (y - radius < 0)) || (y + radius > Main.BG_HEIGHT); //TODO: delete the last condition
+        return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) || (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT); //TODO: delete the last condition
     }
 
     public void changeDirection() {
@@ -111,12 +111,12 @@ public class Ball extends Element {
     public boolean boundaryCollision() {
         if (x - radius < 0) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
-        } else if (x + radius > Main.BG_WIDTH) {
+        } else if (x + radius > Engine.BG_WIDTH) {
             collisionDirection = CollisionDirection.RIGHTTOLEFT;
         } else if (y - radius < 0) {
             collisionDirection = CollisionDirection.UPTODOWN;
-        } else if (y + radius > Main.BG_HEIGHT) {  // TODO: delete this!
-            collisionDirection = CollisionDirection.DOWNTOUP;
+        } else if (y + radius > Engine.BG_HEIGHT) {
+//            collisionDirection = CollisionDirection.DOWNTOUP; // TODO: delete this!
             changeDirection();
             return false;
         } else {

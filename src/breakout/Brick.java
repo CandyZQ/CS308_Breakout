@@ -6,7 +6,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 public class Brick{
-    public static final int BRICK_WIDTH = Main.BG_WIDTH / BrickPane.COL_NUM;
+    public static final int BRICK_WIDTH = Engine.BG_WIDTH / BrickPane.COL_NUM;
     public static final int BRICK_HEIGHT = 30;
 
     public static final int UNREMOVABLE = 9;
