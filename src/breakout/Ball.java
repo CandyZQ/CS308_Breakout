@@ -7,7 +7,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class Ball extends Element {
-    public static final Paint BALL_COLOR = Color.AZURE;
+    public static final Paint BALL_COLOR = Color.BLACK;
     public static final int BALL_RADIUS = 8;
 
     public static final int BALL_SPEED_NORMAL = 400;
@@ -28,7 +28,7 @@ public class Ball extends Element {
     }
 
     public Ball() {
-        this((double) Level.BG_WIDTH / 2, Level.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 60, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
+        this((double) Main.BG_WIDTH / 2, Main.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 60, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Ball extends Element {
     }
 
     public boolean hitBoundary() {
-        return ((x - radius < 0) || (x + radius > Level.BG_WIDTH) || (y - radius < 0)) || (y + radius > Level.BG_HEIGHT); //TODO: delete the last condition
+        return ((x - radius < 0) || (x + radius > Main.BG_WIDTH) || (y - radius < 0)) || (y + radius > Main.BG_HEIGHT); //TODO: delete the last condition
     }
 
     public void changeDirection() {
@@ -110,11 +110,11 @@ public class Ball extends Element {
     public void boundaryCollision() {
         if (x - radius < 0) {
             collisionDirection = CollisionDirection.LEFTTORIGHT;
-        } else if (x + radius > Level.BG_WIDTH) {
+        } else if (x + radius > Main.BG_WIDTH) {
             collisionDirection = CollisionDirection.RIGHTTOLEFT;
         } else if (y - radius < 0) {
             collisionDirection = CollisionDirection.UPTODOWN;
-        } else if (y + radius > Level.BG_HEIGHT) {  // TODO: delete this!
+        } else if (y + radius > Main.BG_HEIGHT) {  // TODO: delete this!
             collisionDirection = CollisionDirection.DOWNTOUP;
         } else {
             throw new IllegalStateException("There is no collision!");

@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 
 public class Paddle extends Element {
     public static final int PADDLE_OFFSET_BOTTOM = 50;
-    public static final Paint PADDLE_COLOR = Color.YELLOW;
+    public static final Paint PADDLE_COLOR = Color.CORAL;
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 10;
     public static final int PADDLE_SPEED_NORMAL = 300;
@@ -27,7 +27,7 @@ public class Paddle extends Element {
     }
 
     public Paddle() {
-        this(Level.BG_WIDTH / 2 - PADDLE_WIDTH / 2, Level.BG_HEIGHT - PADDLE_OFFSET_BOTTOM, 0, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR, MovingDirection.STAY);
+        this(Main.BG_WIDTH / 2 - PADDLE_WIDTH / 2, Main.BG_HEIGHT - PADDLE_OFFSET_BOTTOM, 0, PADDLE_SPEED_NORMAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR, MovingDirection.STAY);
     }
 
     @Override

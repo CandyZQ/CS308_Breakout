@@ -9,25 +9,24 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.File;
 
 public class Level {
 
-    public static final int TEXT_LEFT_PADDLE = 100;
-
-    public static final int BG_HEIGHT = 500;
-    public static final int BG_WIDTH = 500;
-    public static final Paint BACKGROUND = Color.BLACK;
+    public static final int TEXT_LEFT_PADDING = 20;
+    private static final int TEXT_BUTTON_PADDING = 20;
 
     public static final int FRAMES_PER_SECOND = 60;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
 
-    private int level = 0;
+    private int level = 1;
     boolean hasStarted;
 
     private Ball ball;
@@ -56,16 +55,18 @@ public class Level {
         animation.play();
     }
 
-    Scene setupGame(String filename) {
+    public Scene setupGame(String filename) {
         Group root = new Group();
 
         paddle = new Paddle();
         ball = new Ball();
         bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + filename);
-        text = new Text()
-        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
+        text = new Text(TEXT_LEFT_PADDING, Main.BG_HEIGHT - TEXT_BUTTON_PADDING, "Current Level: " + level);
+        text.setFont(new Font(20));
 
-        Scene scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
+        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance(), text);
+
+        Scene scene = new Scene(root, Main.BG_WIDTH, Main.BG_HEIGHT, Main.BACKGROUND);
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));
         return scene;
@@ -125,7 +126,7 @@ public class Level {
 
     public void step(double elapsedTime) {
         ball.move(elapsedTime);
-        paddle.move(elapsedTime, BG_WIDTH);
+        paddle.move(elapsedTime, Main.BG_WIDTH);
 
         // collision check
         checkPaddleCollision();
