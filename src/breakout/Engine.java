@@ -25,8 +25,25 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class is the main Engine that controls the game flow.
+ * All state changes of game element should be made with {@link Controller}
+ * <p></p>
+ *
+ * Example code:
+ * <p></p>
+ * {@code
+ *  import breakout.Engine;
+ *    Engine engine = new Engine(primaryStage);
+ *    engine.createSplashScreen();
+ * }
+ *
+ * @author Cady Zhou
+ * @version 1.1
+ * @since 1.1
+ * @see Controller
+ */
 public class Engine {
-
     public static final int BG_HEIGHT = 500;
     public static final int BG_WIDTH = 500;
     public static final Paint BACKGROUND = Color.WHITE;
@@ -47,37 +64,51 @@ public class Engine {
     private int ballSpeedFastCycle = 0;
 
     boolean hasStarted;
-    boolean finalScreenStage;
+    boolean isFinalScreen;
 
     private Ball ball;
     private BrickPane bricks;
     private Paddle paddle;
+    private List<PowerUp> powerUps;
+    private Text text;
 
     private Stage primaryStage;
-    private Text text;
-    private Group root;
     private Scene scene;
-    private List<PowerUp> powerUps;
+    private Group root;
+
     private Controller controller;
 
+    /**
+     * Creates an instance of Engine of runs the game
+     * @param primaryStage  the main {@link Stage}
+     */
     public Engine(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.finalScreenStage = false;
-        powerUps = new ArrayList<>();
+        this.isFinalScreen = false;
+
         root = new Group();
         controller = new Controller();
+        powerUps = new ArrayList<>();
     }
 
+    /**
+     * Creates a splash screen that provides game keys. Should be the
+     * first screen of the game.
+     */
     public void createSplashScreen() {
         Text title = new Text(BG_WIDTH / 2 - TITLE_PADDING, BG_HEIGHT / 2, "B-Breaker");
         title.setFont(new Font(30));
         title.setTextAlignment(TextAlignment.RIGHT);
 
-        Text text = new Text(BG_WIDTH / 2 - TITLE_PADDING - TEXT_PADDING, BG_HEIGHT / 2 + 50, "Press any key to start");
+        Text text = new Text(BG_WIDTH / 2 - TITLE_PADDING - TEXT_PADDING, BG_HEIGHT / 2 + 50,
+                "Press any key to start\nA/D: Rotate Paddle\nSpace: Shoot Ball");
         text.setFont(new Font(20));
-        text.setTextAlignment(TextAlignment.RIGHT);
+        text.setTextAlignment(TextAlignment.CENTER);
 
-        root.getChildren().addAll(title, text, new Ball().getInstance(), new Paddle(level).getInstance(),
+        root.getChildren().addAll(title,
+                text,
+                new Ball().getInstance(),
+                new Paddle(level).getInstance(),
                 new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + "map_level_0.txt").getInstance());
 
         scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
@@ -89,58 +120,35 @@ public class Engine {
         setStage();
     }
 
-    public void createNewLevel() {
-        finalScreenStage = false;
+    /**
+     * Creates a new scene with given level.
+     */
+    private void createNewLevel() {
+        isFinalScreen = false;
         powerUps = new ArrayList<>();
-        setupGame("map_level_" + level + ".txt");
+
+        addLevelElements("map_level_" + level + ".txt");
+        updateStatus();
+        setUpLevelScene();
+        setStage();
     }
 
-    public void addFrame() {
-        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-
-        Timeline animation = new Timeline();
-        animation.setCycleCount(Timeline.INDEFINITE);
-        animation.getKeyFrames().add(frame);
-        animation.play();
-    }
-
-    private void setStage() {
-        primaryStage.setTitle("B-Breaker");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
-
-    public void setupGame(String filename) {
+    /**
+     * Add elements with given level to {@link #root}
+     * @param filename  a txt file of brick configuration
+     */
+    private void addLevelElements(String filename) {
         root = new Group();
 
         paddle = new Paddle(level);
         ball = new Ball();
         bricks = new BrickPane("." + File.separatorChar + "resources" + File.separatorChar + filename);
         root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
-        updateStatus();
-
-        setUpLevelScene();
-        setStage();
     }
 
-    public void setPowerUpScene() {
-        root = new Group();
-        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
-
-        for (PowerUp p: powerUps) {
-            root.getChildren().add(p.getInstance());
-        }
-        updateStatus();
-        setUpLevelScene();
-        setStage();
-    }
-
-    private void setUpLevelScene() {
-        scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
-        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));
-    }
-
+    /**
+     * Add current level and lives left (Status) to {@link #root}.
+     */
     private void updateStatus() {
         if (text != null) {
             root.getChildren().remove(text);
@@ -149,13 +157,34 @@ public class Engine {
                 "Current Level: " + level +
                         "                                      Lives Left: " + life);
         text.setFont(new Font(20));
-
         root.getChildren().add(text);
+    }
+
+    private void setUpLevelScene() {
+        scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
+        scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
+        scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));
+    }
+
+    private void setStage() {
+        primaryStage.setTitle("B-Breaker");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void addFrame() {
+        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
+
+        Timeline animation = new Timeline();
+        animation.setCycleCount(Timeline.INDEFINITE);
+        animation.getKeyFrames().add(frame);
+        animation.play();
     }
 
     private void step(double elapsedTime) {
         ball.move(elapsedTime);
         paddle.move(elapsedTime);
+
         for (PowerUp p: powerUps) {
             p.move(elapsedTime);
         }
@@ -167,7 +196,7 @@ public class Engine {
             }
         }
 
-        if (!finalScreenStage) {
+        if (!isFinalScreen) {
             // collision check
             checkBoundaryCollision();
             checkPaddleCollision();
@@ -180,16 +209,27 @@ public class Engine {
                 hasStarted = false;
                 createNewLevel();
             }
-
             if (isDead()) {
                 createFinalScreen("Lose");
             }
-
             if (isWin()) {
                 createFinalScreen("Win");
             }
         }
     }
+
+    private void setPowerUpScene() {
+        root = new Group();
+        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
+
+        for (PowerUp p: powerUps) {
+            root.getChildren().add(p.getInstance());
+        }
+        updateStatus();
+        setUpLevelScene();
+        setStage();
+    }
+
 
     private void checkPowerUpCollision() {
         for (Iterator<PowerUp> itr = powerUps.iterator(); itr.hasNext();) {
@@ -231,7 +271,7 @@ public class Engine {
     }
 
     private void createFinalScreen(String message) {
-        finalScreenStage = true;
+        isFinalScreen = true;
 
         Text text = new Text(BG_WIDTH / 2 - TITLE_PADDING, BG_HEIGHT / 2 + 50, "You " + message + " !");
         text.setFont(new Font(30));
@@ -276,7 +316,7 @@ public class Engine {
     private void checkPaddleCollision() {
         Shape ballPaddleIntersection = Shape.intersect((Shape) ball.getInstance(), (Shape) paddle.getInstance());
         if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
-            controller.ballPaddleCollision(ball, paddle.getAngle(), paddle.getX());
+            controller.ballPaddleCollision(ball, paddle);
         }
     }
 
@@ -300,6 +340,7 @@ public class Engine {
             }
         }
     }
+
     private void handleKeyReleased(KeyCode code) {
         paddle.setMovingDirection(MovingDirection.STAY);
         paddle.setRotationDirection(RotationDirection.FLOATING);
@@ -376,6 +417,4 @@ public class Engine {
         }
 
     }
-
-
 }

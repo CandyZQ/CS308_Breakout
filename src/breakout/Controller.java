@@ -6,6 +6,31 @@ import breakout.elements.Ball;
 import breakout.bricks.Brick;
 import breakout.elements.Paddle;
 
+/**
+ * This class is the controller that makes calculation and
+ * state change when two or more game elements are involved.
+ * Parameters for all methods should be game elements.
+ * <p></p>
+ *
+ * Example code: the following code changes necessary fields afater
+ * a ball collides a paddle.
+ * <p></p>
+ * {@code
+ *  import breakout.Controller;
+ *  import breakout.elements.*;
+ *    Ball b = new Ball();
+ *    Paddle p = new Paddle();
+ *    Controller controller = new Controller();
+ *
+ *    if (b collides p) {
+ *        controller.ballPaddleCollision(b, p);
+ *    }
+ * }
+ *
+ * @author Cady Zhou
+ * @version 1.1
+ * @since 1.1
+ */
 public class Controller {
 
     /**
@@ -13,12 +38,14 @@ public class Controller {
      * direction of the ball, after a collision between the ball and
      * the paddle.
      * @param ball      the ball appearing on current scene
-     * @param alpha     the angle of paddle
-     * @param paddleX   the x position of paddle
+     * @param paddle    the ball appearing on current scene
      */
-    public void ballPaddleCollision(Ball ball, double alpha, double paddleX) {
+    public void ballPaddleCollision(Ball ball, Paddle paddle) {
+        double alpha = paddle.getAngle();
+
         // If ball is at 1/4 on each side, speed up
-        if (ball.getX() <= (paddleX + Paddle.PADDLE_WIDTH / 4.0) || ball.getX() >= (paddleX + Paddle.PADDLE_WIDTH / 4.0 * 3)) {
+        if (ball.getX() <= (paddle.getX() + Paddle.PADDLE_WIDTH / 4.0)
+                || ball.getX() >= (paddle.getX() + Paddle.PADDLE_WIDTH / 4.0 * 3)) {
             ball.setBallSpeedIncrement();
         }
 
@@ -29,13 +56,17 @@ public class Controller {
         ball.changeDirection();
     }
 
+    /**
+     * Update changed states of this ball after colliding with a brick.
+     * @param ball      the ball appearing ont he current scene
+     * @param brick     the brick that collides with the ball
+     */
     public void ballBrickCollision(Ball ball, Brick brick) {
         if (ball.isSpeedIncremented()) {
             ball.setBallSpeedNormal();
         }
 
         CollisionDirection cd;
-
         if (ball.getY() + ball.getRadius() <= brick.getY()) {
             cd = CollisionDirection.DOWNTOUP;
         } else if (ball.getY() - ball.getRadius()
