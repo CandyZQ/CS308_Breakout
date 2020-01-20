@@ -34,6 +34,7 @@ public abstract class Element {
     double x;
     double y;
     double speed;
+
     MovingDirection movingDirection;
     Node instance;
 
@@ -56,6 +57,7 @@ public abstract class Element {
         this.y = y;
         this.speed = speed;
         this.movingDirection = movingDirection;
+        this.instance = null;
     }
 
     /**
@@ -64,8 +66,52 @@ public abstract class Element {
      * @throws NullPointerException If this instance is not initialized
      */
     public Node getInstance() throws NullPointerException {
+        if (instance == null) {
+            throw new NullPointerException("Instance has not been created");
+        }
         return instance;
     }
+
+    /**
+     * Gets the x position of this element.
+     * @return  a double represents x position
+     */
+    public double getX() {
+        return x;
+    }
+
+    /**
+     * Gets the y position of this element.
+     * @return  a double represents y position
+     */
+    public double getY() {
+        return y;
+    }
+
+    /**
+     * Gets moving direction of this element.
+     * @return  the moving direction of this element
+     */
+    public MovingDirection getMovingDirection() {
+        return movingDirection;
+    }
+
+    /**
+     * Sets speed of this element
+     * @param speed speed to be set
+     */
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    /**
+     * Sets moving direction of this element.
+     * @param movingDirection new moving direction of this element
+     */
+    public void setMovingDirection(MovingDirection movingDirection) {
+        this.movingDirection = movingDirection;
+    }
+
 
     /**
      * Defines movement of this element during {@code elapsedTime}.

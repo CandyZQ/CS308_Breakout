@@ -3,13 +3,41 @@ package breakout.elements;
 import breakout.Engine;
 import breakout.directions.CollisionDirection;
 import breakout.directions.MovingDirection;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Shape;
 
+/**
+ * This Ball class defines the ball with specified position, speed,
+ * and moving information. This ball moves and bounces following physics
+ * laws. By default, this ball sits in the middle of the horizontal axis,
+ * on top of the paddle.
+ * <p></p>
+ *
+ * Example code: the following code creates a pink-colored Ball with
+ * radius 5, starting at (0,0) and moving towards right at normal speed.
+ * <p></p>
+ * {@code
+ *  import breakout.elements.Ball;
+ *  import javafx.scene.paint.Color;
+ *  import breakout.directions.MovingDirection;
+ *
+ *  Ball b = new Ball(0, 0, 90, BALL_SPEED_NORMAL, 5, Color.PINK, MovingDirection.RIGHT);
+ *  while (true) {
+ *    b.move(200);
+ *  }
+ * }
+ *
+ * @author Cady Zhou
+ * @version 1.1
+ * @since 1.1
+ * @see DynamicElement
+ */
 public class Ball extends DynamicElement {
-    public static final Paint BALL_COLOR = Color.BLACK;
     public static final int BALL_RADIUS = 8;
+    public static final Paint BALL_COLOR = Color.BLACK;
 
     public static final int BALL_SPEED_NORMAL = 400;
     public static final int BALL_SPEED_INCREMENT = 600;
@@ -19,32 +47,62 @@ public class Ball extends DynamicElement {
     private double dx;
     private double dy;
     private double radius;
-
-    private Circle instance;
-    private CollisionDirection collisionDirection;
     private double initialAngle;
 
+    private CollisionDirection collisionDirection;
+
+    /**
+     * Creates a new instance of Ball with default setting.
+     */
     public Ball() {
-        this((double) Engine.BG_WIDTH / 2, Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 30, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
+        this(Engine.BG_WIDTH / 2.0,
+                Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM,
+                30,
+                BALL_SPEED_NORMAL,
+                BALL_RADIUS,
+                BALL_COLOR,
+                MovingDirection.STAY);
     }
 
-    public Ball(double x, double y, double angle, int speed, double radius, Paint fill, MovingDirection direction) {
-        super(x, y - radius, angle, speed, fill, direction);
-        initialAngle = angle;
+    /**
+     * Creates a new instance of Ball with the given position,
+     * fill,and moving information.
+     * @param x                 horizontal position of this ball
+     * @param y                 vertical position of this ball
+     * @param angle             angle relative to the vertical line
+     * @param speed             speed of this ball
+     * @param radius            radius of this ball
+     * @param fill              a {@link Paint} represents color of
+     *                          this ball
+     * @param movingDirection   moving direction of this ball
+     */
+
+    public Ball(double x, double y, double angle, int speed, double radius,
+                Paint fill, MovingDirection movingDirection) {
+        super(x, y - radius, angle, speed, fill, movingDirection);
+
+        this.initialAngle = angle;
         this.radius = radius;
-        makeShape();
         collisionDirection = CollisionDirection.NO_COLLISION;
+        makeShape();
     }
 
-
+    /**
+     * Assigns {@link Element#instance} a new instance of {@link Circle}
+     * with given position and color.
+     * @see DynamicElement#makeShape
+     */
     @Override
-    public void makeShape() {
+    protected void makeShape() {
         instance = new Circle(x, y, radius);
-        instance.setFill(fill);
+        ((Circle) instance).setFill(fill);
     }
 
+    /**
+     * Updates ball speed on both horizontal and vertical axes.
+     */
     @Override
-    public void updateAxesSpeed() {
+    protected void updateAxesSpeed() {
         dx = Math.sin(Math.toRadians(Math.abs(angle)));
         dy = Math.cos(Math.toRadians(Math.abs(angle)));
 
@@ -69,56 +127,33 @@ public class Ball extends DynamicElement {
             default:
                 break;
         }
-//        System.out.println("dx: " + dx);
-//        System.out.println("dy: " + dy);
     }
 
-    @Override
-    public Circle getInstance() throws NullPointerException {
-        if (instance == null) {
-            throw new NullPointerException("Instance has not been created");
-        }
-        return instance;
-    }
-
+    /**
+     * Updates the position of this Ball according to its speed on
+     * horizontal and vertical axes.
+     * @param elapsedTime   time passed during one animation cycle
+     */
     @Override
     public void move(double elapsedTime) {
-        x = instance.getCenterX() + dx * elapsedTime * speed;
-        y = instance.getCenterY() + dy * elapsedTime * speed;
-        instance.setCenterX(x);
-        instance.setCenterY(y);
+        x = ((Circle) instance).getCenterX() + dx * elapsedTime * speed;
+        y = ((Circle) instance).getCenterY() + dy * elapsedTime * speed;
+        ((Circle) instance).setCenterX(x);
+        ((Circle) instance).setCenterY(y);
     }
 
-    public void paddleCollision(double alpha, double paddleX) {
-        if (x <= (paddleX + Paddle.PADDLE_WIDTH / 4.0) || x >= (paddleX + Paddle.PADDLE_WIDTH / 4.0 * 3)) {
-            speed = BALL_SPEED_INCREMENT;
-        }
-        collisionDirection = CollisionDirection.DOWNTOUP;
-        angle = movingDirection == MovingDirection.DOWNRIGHT ? initialAngle + alpha : initialAngle - alpha;
-        changeDirection();
-    }
-
-    public boolean hitBoundary() {
-//        System.out.println("x: " + x);
-//        System.out.println("y: " + y);
-        return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) || (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT); //TODO: delete the last condition
-    }
-
+    /**
+     * Changes moving direction after a collision.
+     */
     public void changeDirection() {
         switch (collisionDirection) {
             case LEFTTORIGHT:
-//                System.out.println("LEFTTORIGHT");
-//                System.out.println("Moving direction: " + movingDirection);
-//                System.out.println("Angle: " + angle);
                 movingDirection = movingDirection == MovingDirection.UPLEFT ? MovingDirection.UPRIGHT : MovingDirection.DOWNRIGHT;
                 break;
             case UPTODOWN:
                 movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.DOWNRIGHT : MovingDirection.DOWNLEFT;
                 break;
             case RIGHTTOLEFT:
-//                System.out.println("RIGHTOTLEFT");
-//                System.out.println("Moving direction: " + movingDirection);
-//                System.out.println("Angle: " + angle);
                 movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.UPLEFT : MovingDirection.DOWNLEFT;
                 break;
             case DOWNTOUP:
@@ -131,55 +166,73 @@ public class Ball extends DynamicElement {
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    // return true if collide a boundary, false if dead
-    public boolean boundaryCollision() {
-        if (x - radius < 0) {
-            collisionDirection = CollisionDirection.LEFTTORIGHT;
-        } else if (x + radius > Engine.BG_WIDTH) {
-            collisionDirection = CollisionDirection.RIGHTTOLEFT;
-        } else if (y - radius < 0) {
-            collisionDirection = CollisionDirection.UPTODOWN;
-        } else if (y + radius > Engine.BG_HEIGHT) {
-            collisionDirection = CollisionDirection.DOWNTOUP; // TODO: delete this!
-            changeDirection();
-            return false;
-        } else {
-            throw new IllegalStateException("There is no collision!");
-        }
-        changeDirection();
-        return true;
+    /**
+     * Checks if this ball hits a boundary and needs to perform bouncing.
+     * @return true if this ball hits any boundary
+     */
+    public boolean isHitBoundary() {
+        return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) ||
+                (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT); //TODO: delete the last condition
     }
 
-    public void brickCollision(Brick brick) {
-        if (isSpeedIncreamented()) setBallSpeedNormal();
-        if (y + radius <= brick.getY()) {
-            collisionDirection = CollisionDirection.DOWNTOUP;
-        } else if (y - radius >= brick.getY() + Brick.BRICK_HEIGHT) {
-            collisionDirection = CollisionDirection.UPTODOWN;
-        } else if (x < brick.getX()) {
-            collisionDirection = CollisionDirection.RIGHTTOLEFT;
-        } else if (x > brick.getX() + Brick.BRICK_WIDTH) {
-            collisionDirection = CollisionDirection.LEFTTORIGHT;
-        } else {
-            collisionDirection = CollisionDirection.LEFTTORIGHT;
-            System.out.println("Warning: Invalid Brick Collision!");
-        }
-        changeDirection();
-    }
-
-    public void setBallSpeedFast() {
-        speed = BALL_SPEED_FAST;
-    }
-
-    public void setBallSpeedNormal() {
-        speed = BALL_SPEED_NORMAL;
-    }
-
+    /**
+     * Checks if speed is BALL_SPEED_FAST.
+     * @return true if speed is BALL_SPEED_FAST
+     */
     public boolean isSpeedFast() {
         return speed == BALL_SPEED_FAST;
     }
 
-    public boolean isSpeedIncreamented() {
+    /**
+     * Checks if speed is BALL_SPEED_INCREMENT.
+     * @return true if speed is BALL_SPEED_INCREMENT
+     */
+    public boolean isSpeedIncremented() {
         return speed == BALL_SPEED_INCREMENT;
+    }
+
+    /**
+     * Gets the initial angle of this ball.
+     * @return  a double represents the initial angle
+     */
+    public double getInitialAngle() {
+        return initialAngle;
+    }
+
+    /**
+     * Gets the radius of this ball.
+     * @return  a double represents radius
+     */
+    public double getRadius() {
+        return radius;
+    }
+
+    /**
+     * Sets collision direction after a collision.
+     * @param collisionDirection the updated collision direction
+     */
+    public void setCollision(CollisionDirection collisionDirection) {
+        this.collisionDirection = collisionDirection;
+    }
+
+    /**
+     * Sets speed to BALL_SPEED_FAST.
+     */
+    public void setBallSpeedFast() {
+        setSpeed(BALL_SPEED_FAST);
+    }
+
+    /**
+     * Sets speed to BALL_SPEED_NORMAL.
+     */
+    public void setBallSpeedNormal() {
+        setSpeed(BALL_SPEED_NORMAL);
+    }
+
+    /**
+     * Sets speed to BALL_SPEED_INCREMENT.
+     */
+    public void setBallSpeedIncrement() {
+        setSpeed(BALL_SPEED_INCREMENT);
     }
 }

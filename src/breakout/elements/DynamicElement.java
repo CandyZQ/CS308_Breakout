@@ -43,6 +43,8 @@ public abstract class DynamicElement extends Element {
      * @param fill              a {@link Paint} represents color of
      *                          this element
      * @param movingDirection   moving direction of this element
+     * @see #setMovingDirection(MovingDirection)
+     * @see #makeShape
      */
     public DynamicElement(double x, double y, double angle, int speed, Paint fill, MovingDirection movingDirection) {
         super(x, y, speed, movingDirection);
@@ -53,13 +55,21 @@ public abstract class DynamicElement extends Element {
     }
 
     /**
-     * Sets moving direction of this element.
+     * Sets moving direction of this element and update speed on axes
      * @param movingDirection new moving direction of this element
      */
-
+    @Override
     public void setMovingDirection(MovingDirection movingDirection) {
-        this.movingDirection = movingDirection;
+        super.setMovingDirection(movingDirection);
         updateAxesSpeed();
+    }
+
+    /**
+     * Sets angle for this element
+     * @param angle angle relative the vertical axis, with CC as positive
+     */
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 
     /**
@@ -68,12 +78,12 @@ public abstract class DynamicElement extends Element {
      * position, movement and color, are assigned if applicable. This
      * method is typically called in a constructor of a child class.
      */
-    public abstract void makeShape();
+    protected abstract void makeShape();
 
     /**
      * Updates speed of this {@code instance} on all axes (for example,
      * dx and dy). This method is typically called after a direction change.
      * @see #setMovingDirection(MovingDirection) 
      */
-    public abstract void updateAxesSpeed();
+    protected abstract void updateAxesSpeed();
 }

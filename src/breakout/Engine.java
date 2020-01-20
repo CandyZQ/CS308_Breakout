@@ -2,10 +2,7 @@ package breakout;
 
 import breakout.directions.MovingDirection;
 import breakout.directions.RotationDirection;
-import breakout.elements.Ball;
-import breakout.elements.Brick;
-import breakout.elements.Paddle;
-import breakout.elements.PowerUp;
+import breakout.elements.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
@@ -59,12 +56,14 @@ public class Engine {
     private Group root;
     private Scene scene;
     private List<PowerUp> powerUps;
+    private Controller controller;
 
     public Engine(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.finalScreenStage = false;
         powerUps = new ArrayList<>();
         root = new Group();
+        controller = new Controller();
     }
 
     public void createSplashScreen() {
@@ -264,8 +263,8 @@ public class Engine {
     }
 
     private void checkBoundaryCollision() {
-        if (ball.hitBoundary()) {
-            if (!ball.boundaryCollision()) {
+        if (ball.isHitBoundary()) {
+            if (!controller.ballBoundaryCollision(ball)) {
                 life -= 1;
                 updateStatus();
             }
@@ -273,9 +272,9 @@ public class Engine {
     }
 
     private void checkPaddleCollision() {
-        Shape ballPaddleIntersection = Shape.intersect(ball.getInstance(), paddle.getInstance());
+        Shape ballPaddleIntersection = Shape.intersect((Shape) ball.getInstance(), (Shape) paddle.getInstance());
         if (ballPaddleIntersection.getBoundsInLocal().getWidth() != -1) {
-            ball.paddleCollision(paddle.getAngle(), paddle.getX());
+            controller.ballPaddleCollision(ball, paddle.getAngle(), paddle.getX());
         }
     }
 
@@ -284,10 +283,10 @@ public class Engine {
             for (int c = 0; c < BrickPane.COL_NUM; c++) {
                 Brick brick = bricks.getBricks()[r][c];
                 if (brick != null) {
-                    Shape ballBrickIntersection = Shape.intersect(ball.getInstance(), brick.getInstance());
+                    Shape ballBrickIntersection = Shape.intersect((Shape) ball.getInstance(), brick.getInstance());
                     if (ballBrickIntersection.getBoundsInLocal().getWidth() != -1) {
 
-                        ball.brickCollision(brick);
+                        controller.ballBrickCollision(ball, brick);
                         PowerUp powerUp = bricks.checkPowerUp(r, c);
                         if (powerUp != null) {
                             powerUps.add(powerUp);
