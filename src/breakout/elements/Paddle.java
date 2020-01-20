@@ -18,17 +18,16 @@ import javafx.scene.transform.Rotate;
  * accelerates until it hits a brick if bouncing within 1/4 of either end.
  * <p></p>
  *
- * Example code: the following code creates a pink-colored ball with
- * radius 5, starting at (0,0) and moving towards right at normal speed.
+ * Example code: the following code creates a level-1 paddle with default
+ * setting and moving towards right at normal speed.
  * <p></p>
  * {@code
- *  import breakout.elements.Paddle;
- *  import javafx.scene.paint.Color;
+ *  import breakout.elements.Ball;
  *  import breakout.directions.MovingDirection;
  *
- *  Ball b = new Ball(0, 0, 90, BALL_SPEED_NORMAL, 5, Color.PINK, MovingDirection.RIGHT);
+ *  Paddle p = new Paddle(1);
  *  while (true) {
- *    b.move(200);
+ *    p.move(200);
  *  }
  * }
  *
