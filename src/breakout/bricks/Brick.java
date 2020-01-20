@@ -5,9 +5,13 @@ import breakout.Engine;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-
 import java.util.Random;
 
+/**
+ * This Brick class defines a single brick that has its size defined
+ * by size of the application window and column number of bricks. The
+ * two parameters
+ */
 public class Brick{
     public static final int BRICK_WIDTH = Engine.BG_WIDTH / BrickPane.COL_NUM;
     public static final int BRICK_HEIGHT = 30;
@@ -76,22 +80,6 @@ public class Brick{
 
     public boolean shouldRemove() {
         return level <= 0;
-    }
-
-    public Rectangle getInstance() {
-        return rectangle;
-    }
-    public double getX() {
-        return rectangle.getX();
-    }
-
-    public double getY() {
-        return rectangle.getY();
-    }
-
-
-    public void powerUpMove(double elapsedTime) {
-        powerUp.move(elapsedTime);
     }
 
     public boolean hasPowerUp() {

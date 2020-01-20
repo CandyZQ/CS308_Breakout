@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
  * on top of the paddle.
  * <p></p>
  *
- * Example code: the following code creates a pink-colored Ball with
+ * Example code: the following code creates a pink-colored ball with
  * radius 5, starting at (0,0) and moving towards right at normal speed.
  * <p></p>
  * {@code
