@@ -1,5 +1,6 @@
-package breakout;
+package breakout.elements;
 
+import breakout.PowerUpType;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

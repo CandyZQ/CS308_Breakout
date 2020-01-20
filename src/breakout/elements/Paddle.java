@@ -1,13 +1,15 @@
-package breakout;
+package breakout.elements;
 
+import breakout.Engine;
 import breakout.directions.MovingDirection;
 import breakout.directions.RotationDirection;
+import breakout.elements.DynamicElement;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
-public class Paddle extends Element {
+public class Paddle extends DynamicElement {
     public static final int PADDLE_OFFSET_BOTTOM = 80;
     public static final Paint PADDLE_COLOR = Color.CORAL;
 
@@ -44,7 +46,7 @@ public class Paddle extends Element {
     }
 
     @Override
-    public void updateMovingDirection() {
+    public void updateAxesSpeed() {
         switch (movingDirection) {
             case RIGHT:
                 dx = 1;

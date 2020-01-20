@@ -1,12 +1,13 @@
-package breakout;
+package breakout.elements;
 
+import breakout.Engine;
 import breakout.directions.CollisionDirection;
 import breakout.directions.MovingDirection;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
-public class Ball extends Element {
+public class Ball extends DynamicElement {
     public static final Paint BALL_COLOR = Color.BLACK;
     public static final int BALL_RADIUS = 8;
 
@@ -23,6 +24,10 @@ public class Ball extends Element {
     private CollisionDirection collisionDirection;
     private double initialAngle;
 
+    public Ball() {
+        this((double) Engine.BG_WIDTH / 2, Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 30, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
+    }
+
     public Ball(double x, double y, double angle, int speed, double radius, Paint fill, MovingDirection direction) {
         super(x, y - radius, angle, speed, fill, direction);
         initialAngle = angle;
@@ -31,9 +36,6 @@ public class Ball extends Element {
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 
-    public Ball() {
-        this((double) Engine.BG_WIDTH / 2, Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM, 30, BALL_SPEED_NORMAL, BALL_RADIUS, BALL_COLOR, MovingDirection.STAY);
-    }
 
     @Override
     public void makeShape() {
@@ -42,7 +44,7 @@ public class Ball extends Element {
     }
 
     @Override
-    public void updateMovingDirection() {
+    public void updateAxesSpeed() {
         dx = Math.sin(Math.toRadians(Math.abs(angle)));
         dy = Math.cos(Math.toRadians(Math.abs(angle)));
 
@@ -125,7 +127,7 @@ public class Ball extends Element {
             default:
                 break;
         }
-        updateMovingDirection();
+        updateAxesSpeed();
         collisionDirection = CollisionDirection.NO_COLLISION;
     }
 

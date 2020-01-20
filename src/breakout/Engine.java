@@ -2,10 +2,13 @@ package breakout;
 
 import breakout.directions.MovingDirection;
 import breakout.directions.RotationDirection;
+import breakout.elements.Ball;
+import breakout.elements.Brick;
+import breakout.elements.Paddle;
+import breakout.elements.PowerUp;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;

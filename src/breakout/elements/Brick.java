@@ -1,5 +1,7 @@
-package breakout;
+package breakout.elements;
 
+import breakout.BrickPane;
+import breakout.Engine;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;

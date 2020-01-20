@@ -1,10 +1,10 @@
 package breakout;
 
-import javafx.scene.Node;
+import breakout.elements.Brick;
+import breakout.elements.PowerUp;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.TilePane;
 
 import java.io.File;
 import java.io.FileInputStream;
