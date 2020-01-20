@@ -13,7 +13,6 @@ import javafx.scene.shape.Circle;
  * laws. By default, this ball sits in the middle of the horizontal axis,
  * on top of the paddle.
  * <p></p>
- *
  * Example code: the following code creates a pink-colored ball with
  * radius 5, starting at (0,0) and moving towards right at normal speed.
  * <p></p>
@@ -22,7 +21,8 @@ import javafx.scene.shape.Circle;
  *  import javafx.scene.paint.Color;
  *  import breakout.directions.MovingDirection;
  *
- *  Ball b = new Ball(0, 0, 90, BALL_SPEED_NORMAL, 5, Color.PINK, MovingDirection.RIGHT);
+ *  Ball b = new Ball(0, 0, 90, BALL_SPEED_NORMAL, 5, Color.PINK,
+ *                                          MovingDirection.RIGHT);
  *  while (true) {
  *    b.move(200);
  *  }
@@ -41,6 +41,7 @@ public class Ball extends DynamicElement {
     public static final int BALL_SPEED_INCREMENT = 600;
     public static final int BALL_SPEED_FAST = 800;
     public static final int BALL_SPEED_UP_CYCLE = 200;
+    public static final int BALL_INITIAL_ANGLE = 30;
 
     private double dx;
     private double dy;
@@ -55,7 +56,7 @@ public class Ball extends DynamicElement {
     public Ball() {
         this(Engine.BG_WIDTH / 2.0,
                 Engine.BG_HEIGHT - Paddle.PADDLE_OFFSET_BOTTOM,
-                30,
+                BALL_INITIAL_ANGLE,
                 BALL_SPEED_NORMAL,
                 BALL_RADIUS,
                 BALL_COLOR,
@@ -74,7 +75,6 @@ public class Ball extends DynamicElement {
      *                          this ball
      * @param movingDirection   moving direction of this ball
      */
-
     public Ball(double x, double y, double angle, int speed, double radius,
                 Paint fill, MovingDirection movingDirection) {
         super(x, y - radius, angle, speed, fill, movingDirection);
@@ -146,16 +146,20 @@ public class Ball extends DynamicElement {
     public void changeDirection() {
         switch (collisionDirection) {
             case LEFTTORIGHT:
-                movingDirection = movingDirection == MovingDirection.UPLEFT ? MovingDirection.UPRIGHT : MovingDirection.DOWNRIGHT;
+                movingDirection = movingDirection == MovingDirection.UPLEFT
+                        ? MovingDirection.UPRIGHT : MovingDirection.DOWNRIGHT;
                 break;
             case UPTODOWN:
-                movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.DOWNRIGHT : MovingDirection.DOWNLEFT;
+                movingDirection = movingDirection == MovingDirection.UPRIGHT
+                        ? MovingDirection.DOWNRIGHT : MovingDirection.DOWNLEFT;
                 break;
             case RIGHTTOLEFT:
-                movingDirection = movingDirection == MovingDirection.UPRIGHT ? MovingDirection.UPLEFT : MovingDirection.DOWNLEFT;
+                movingDirection = movingDirection == MovingDirection.UPRIGHT
+                        ? MovingDirection.UPLEFT : MovingDirection.DOWNLEFT;
                 break;
             case DOWNTOUP:
-                movingDirection = movingDirection == MovingDirection.DOWNLEFT ? MovingDirection.UPLEFT : MovingDirection.UPRIGHT;
+                movingDirection = movingDirection == MovingDirection.DOWNLEFT
+                        ? MovingDirection.UPLEFT : MovingDirection.UPRIGHT;
                 break;
             default:
                 break;
@@ -169,8 +173,8 @@ public class Ball extends DynamicElement {
      * @return true if this ball hits any boundary
      */
     public boolean isHitBoundary() {
-        return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) ||
-                (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT);
+        return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH)
+                || (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT);
     }
 
     /**
