@@ -5,13 +5,30 @@ import breakout.elements.PowerUp;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class BrickPane {
+/**
+ * The BrickPane class is a container of all bricks.Instead of explicitly
+ * creating all bricks, creates a BrickPane that reads brick layout from
+ * a txt file.
+ * <p></p>
+ *
+ * Example code: the following code creates a level 5 brick at (0,0) of
+ * BrickPane.
+ * <p></p>
+ * {@code
+ *  import breakout.bricks.Brick;
+ *  Brick b = new Brick(5, 0, 0);
+ * }
+ * author Cady Zhou
+ * @version 1.1
+ * @since 1.1
+ * @see Brick
+ */
 
+public class BrickPane {
     public static final int BRICK_GAP = 5;
     public static final int ROW_NUM = 8;
     public static final int COL_NUM = 6;
@@ -20,6 +37,10 @@ public class BrickPane {
     private Integer[][] brickRepresentations;
     private GridPane gridPane;
 
+    /**
+     * Creates a brickPane with given brick configuration.
+     * @param filename  a txt file that contains brick configuration
+     */
     public BrickPane(String filename) {
         bricks = new Brick[ROW_NUM][COL_NUM];
         brickRepresentations = new Integer[ROW_NUM][COL_NUM];
@@ -30,7 +51,6 @@ public class BrickPane {
 
     private void readRepresentations(String filename) {
         String s = fileInput(filename);
-        System.out.println(s);
 
         for (int r = 0; r < ROW_NUM; r++) {
             for (int c = 0; c < COL_NUM; c++) {
@@ -45,7 +65,7 @@ public class BrickPane {
         try {
             File inputFile = new File(filename);
             in = new FileInputStream(inputFile);
-            byte bt[] = new byte[(int) inputFile.length()];
+            byte[] bt = new byte[(int) inputFile.length()];
             in.read(bt);
             s = new String(bt);
             in.close();
@@ -53,6 +73,7 @@ public class BrickPane {
             e.printStackTrace();
         } finally {
             try {
+                assert in != null;
                 in.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -71,8 +92,8 @@ public class BrickPane {
                 }
             }
         }
-
     }
+
     private void setupPane() {
         gridPane = new GridPane();
         gridPane.setPrefSize(Engine.BG_WIDTH, Engine.BG_HEIGHT);
@@ -81,7 +102,7 @@ public class BrickPane {
         gridPane.setVgap(BRICK_GAP);
 
         for (int c = 0; c < COL_NUM; c++) {
-            ColumnConstraints columnConstraints = new ColumnConstraints((double) (Engine.BG_WIDTH - (COL_NUM - 1) * BRICK_GAP) / COL_NUM);
+            ColumnConstraints columnConstraints = new ColumnConstraints( (Engine.BG_WIDTH - (COL_NUM - 1) * BRICK_GAP) / (double) COL_NUM);
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 
@@ -96,14 +117,12 @@ public class BrickPane {
         }
     }
 
-    public GridPane getInstance() {
-        return gridPane;
-    }
-
-    public Brick[][] getBricks() {
-        return bricks;
-    }
-
+    /**
+     * Update brick color to reflect its {@code level}
+     * @param r     row of that brick
+     * @param c     col of that brick
+     * @see Brick
+     */
     public void updateBrickStatus(int r, int c) {
         gridPane.getChildren().removeIf(node -> GridPane.getRowIndex(node) == r && GridPane.getColumnIndex(node) == c);
 
@@ -112,6 +131,15 @@ public class BrickPane {
         }
     }
 
+    /**
+     * Gets the {@link PowerUp} before setting a brick to null when being
+     * hit and about to disappear.
+     * @param r     row of that brick
+     * @param c     col of that brick
+     * @return      a {@link PowerUp} of that brick, null if that brick
+     *              does not have a {@link PowerUp}
+     * @see PowerUp
+     */
     public PowerUp checkPowerUp(int r, int c) {
         PowerUp powerUp = null;
         if (bricks[r][c].beingHit()) {
@@ -122,4 +150,22 @@ public class BrickPane {
         }
         return powerUp;
     }
+
+    /**
+     * Gets an instance of this gridPane.
+     * @return  this gridPane
+     */
+    public GridPane getInstance() {
+        return gridPane;
+    }
+
+    /**
+     * Gets all brick instances in this brickPane.
+     * @return  a 2D array of bricks
+     */
+    public Brick[][] getBricks() {
+        return bricks;
+    }
+
+
 }
