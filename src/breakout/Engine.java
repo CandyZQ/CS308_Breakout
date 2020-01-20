@@ -209,18 +209,20 @@ public class Engine {
                 hasStarted = false;
                 createNewLevel();
             }
-            if (isDead()) {
-                createFinalScreen("Lose");
+            if (isLose()) {
+                createFinalScene("Lose");
             }
             if (isWin()) {
-                createFinalScreen("Win");
+                createFinalScene("Win");
             }
         }
     }
 
     private void setPowerUpScene() {
         root = new Group();
-        root.getChildren().addAll(ball.getInstance(), paddle.getInstance(), bricks.getInstance());
+        root.getChildren().addAll(ball.getInstance(),
+                paddle.getInstance(),
+                bricks.getInstance());
 
         for (PowerUp p: powerUps) {
             root.getChildren().add(p.getInstance());
@@ -229,7 +231,6 @@ public class Engine {
         setUpLevelScene();
         setStage();
     }
-
 
     private void checkPowerUpCollision() {
         for (Iterator<PowerUp> itr = powerUps.iterator(); itr.hasNext();) {
@@ -270,7 +271,7 @@ public class Engine {
         }
     }
 
-    private void createFinalScreen(String message) {
+    private void createFinalScene(String message) {
         isFinalScreen = true;
 
         Text text = new Text(BG_WIDTH / 2 - TITLE_PADDING, BG_HEIGHT / 2 + 50, "You " + message + " !");
@@ -278,13 +279,14 @@ public class Engine {
         text.setTextAlignment(TextAlignment.RIGHT);
 
         root = new Group();
-        root.getChildren().addAll(text, new Ball().getInstance(), new Paddle(level).getInstance());
+        root.getChildren().addAll(text,
+                new Ball().getInstance(),
+                new Paddle(level).getInstance());
 
         scene = new Scene(root, BG_WIDTH, BG_HEIGHT, BACKGROUND);
         scene.setOnKeyPressed(e -> handCheatKeyInput(e.getCode()));
         setStage();
     }
-
 
     private boolean isEndLevel() {
         for (int r = 0; r < BrickPane.ROW_NUM; r++) {
@@ -300,7 +302,7 @@ public class Engine {
         return level > NUM_LEVEL;
     }
 
-    public boolean isDead() {
+    public boolean isLose() {
         return life <= 0;
     }
 
@@ -308,9 +310,26 @@ public class Engine {
         if (ball.isHitBoundary()) {
             if (!controller.ballBoundaryCollision(ball)) {
                 life -= 1;
-                updateStatus();
+                setUpDeadScene();
             }
         }
+    }
+
+    private void setUpDeadScene() {
+        isFinalScreen = false;
+        powerUps = new ArrayList<>();
+        root = new Group();
+
+        ball = new Ball();
+        paddle = new Paddle(level);
+        root.getChildren().addAll(ball.getInstance(),
+                paddle.getInstance(),
+                bricks.getInstance());
+
+        updateStatus();
+        setUpLevelScene();
+        setStage();
+        hasStarted = false;
     }
 
     private void checkPaddleCollision() {

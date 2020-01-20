@@ -170,7 +170,7 @@ public class Ball extends DynamicElement {
      */
     public boolean isHitBoundary() {
         return ((x - radius < 0) || (x + radius > Engine.BG_WIDTH) ||
-                (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT); //TODO: delete the last condition
+                (y - radius < 0)) || (y + radius > Engine.BG_HEIGHT);
     }
 
     /**

@@ -92,7 +92,6 @@ public class Controller {
      */
     public boolean ballBoundaryCollision(Ball ball) {
         CollisionDirection cd;
-        boolean hit = true;
 
         if (ball.getX() - ball.getRadius() < 0) {
              cd = CollisionDirection.LEFTTORIGHT;
@@ -101,16 +100,13 @@ public class Controller {
         } else if (ball.getY() - ball.getRadius() < 0) {
             cd = CollisionDirection.UPTODOWN;
         } else if (ball.getY() + ball.getRadius() > Engine.BG_HEIGHT) {
-            cd = CollisionDirection.DOWNTOUP; // TODO: delete this!
-            ball.setCollision(cd);
-            ball.changeDirection();
-            hit = false;
+            return false;
         } else {
             throw new IllegalStateException("There is no collision!");
         }
 
         ball.setCollision(cd);
         ball.changeDirection();
-        return hit;
+        return true;
     }
 }
