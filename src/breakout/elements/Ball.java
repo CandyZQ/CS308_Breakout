@@ -3,11 +3,9 @@ package breakout.elements;
 import breakout.Engine;
 import breakout.directions.CollisionDirection;
 import breakout.directions.MovingDirection;
-import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Shape;
 
 /**
  * This Ball class defines the ball with specified position, speed,
