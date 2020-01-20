@@ -48,7 +48,7 @@ public class Brick {
     // unremovable brick has level UNREMOVABLE
     public static final int UNREMOVABLE = 9;
     // # of PowerUp type / POWER_UP_CHANCE = the probability the player gets a power-up
-    public static final int POWER_UP_CHANCE = 3;
+    public static final int POWER_UP_CHANCE = 10;
 
     private int level;
     private Rectangle rectangle;

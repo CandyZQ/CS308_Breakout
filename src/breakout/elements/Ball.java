@@ -134,8 +134,8 @@ public class Ball extends DynamicElement {
      */
     @Override
     public void move(double elapsedTime) {
-        x = ((Circle) instance).getCenterX() + dx * elapsedTime * speed;
-        y = ((Circle) instance).getCenterY() + dy * elapsedTime * speed;
+        x = x + dx * elapsedTime * speed;
+        y = y + dy * elapsedTime * speed;
         ((Circle) instance).setCenterX(x);
         ((Circle) instance).setCenterY(y);
     }

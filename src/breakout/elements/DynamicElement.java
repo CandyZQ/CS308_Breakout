@@ -55,6 +55,14 @@ public abstract class DynamicElement extends Element {
     }
 
     /**
+     * Gets the angle relative to the vertical line of this element.
+     * @return  a double represents angle
+     */
+    public double getAngle() {
+        return angle;
+    }
+
+    /**
      * Sets moving direction of this element and update speed on axes
      * @param movingDirection new moving direction of this element
      */
