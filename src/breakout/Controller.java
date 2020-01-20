@@ -3,7 +3,7 @@ package breakout;
 import breakout.directions.CollisionDirection;
 import breakout.directions.MovingDirection;
 import breakout.elements.Ball;
-import breakout.elements.Brick;
+import breakout.bricks.Brick;
 import breakout.elements.Paddle;
 
 public class Controller {

@@ -1,5 +1,7 @@
 package breakout;
 
+import breakout.bricks.Brick;
+import breakout.bricks.BrickPane;
 import breakout.directions.MovingDirection;
 import breakout.directions.RotationDirection;
 import breakout.elements.*;

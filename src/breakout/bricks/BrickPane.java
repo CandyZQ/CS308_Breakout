@@ -1,6 +1,6 @@
-package breakout;
+package breakout.bricks;
 
-import breakout.elements.Brick;
+import breakout.Engine;
 import breakout.elements.PowerUp;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -114,7 +114,7 @@ public class BrickPane {
 
     public PowerUp checkPowerUp(int r, int c) {
         PowerUp powerUp = null;
-        if (bricks[r][c].takeDamage()) {
+        if (bricks[r][c].beingHit()) {
             if (bricks[r][c].hasPowerUp()) {
                 powerUp = bricks[r][c].getPowerUp();
             }
