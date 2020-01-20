@@ -36,7 +36,6 @@ import javafx.scene.transform.Rotate;
  * @since 1.1
  * @see DynamicElement
  */
-
 public class Paddle extends DynamicElement {
     public static final int PADDLE_WIDTH = 100;
     public static final int PADDLE_HEIGHT = 10;
