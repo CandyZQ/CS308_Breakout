@@ -1,3 +1,4 @@
 # game
 
-Put any written documents related to your project here, such as your PLAN document.
+#### PLAN.md
+A detailed plan of the game prior to implementation
