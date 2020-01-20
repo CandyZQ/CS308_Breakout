@@ -3,7 +3,6 @@ package breakout.elements;
 import breakout.Engine;
 import breakout.directions.MovingDirection;
 import breakout.directions.RotationDirection;
-import breakout.elements.DynamicElement;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;

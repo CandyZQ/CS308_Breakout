@@ -15,12 +15,15 @@ import java.io.IOException;
  * a txt file.
  * <p></p>
  *
- * Example code: the following code creates a level 5 brick at (0,0) of
- * BrickPane.
+ * Example code: the following code creates a BrickPane with
+ * "map_level_0.txt" and simulates when a ball hits brick at
+ * (0,0).
  * <p></p>
  * {@code
- *  import breakout.bricks.Brick;
- *  Brick b = new Brick(5, 0, 0);
+ *  import breakout.bricks.BrickPane;
+ *
+ *  BrickPane bp = new BrickPane("map_level_0.txt");
+ *  bp.updateBrickStatus(0, 0);
  * }
  * author Cady Zhou
  * @version 1.1
